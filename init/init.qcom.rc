@@ -35,6 +35,10 @@ on early-init
 
     # Disable UFS clock scaling
     write /sys/bus/platform/devices/4804000.ufshc/clkscale_enable 0
+    #Disable UFS auto_hibern8
+    write /sys/bus/platform/devices/4804000.ufshc/auto_hibern8 0
+    #Disable UFS clock gating
+    write /sys/bus/platform/devices/4804000.ufshc/clkgate_enable 0
 
 on early-boot
     # Set RLIMIT_MEMLOCK to 64KB
@@ -243,6 +247,10 @@ on property:sys.boot_completed=1
 
     #Enable UFS clock scaling back
     write /sys/bus/platform/devices/4804000.ufshc/clkscale_enable 1
+    #Enable UFS auto_hibern8 back
+    write /sys/bus/platform/devices/4804000.ufshc/auto_hibern8 5000
+    #Enable UFS clock gating back
+    write /sys/bus/platform/devices/4804000.ufshc/clkgate_enable 1
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
     chown media audio /sys/kernel/wcd_cpe0/fw_name
