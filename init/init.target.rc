@@ -77,7 +77,6 @@ on fs
     mkdir /mnt/vendor/persist/time 0770 system system
 
 on late-fs
-    wait_for_prop hwservicemanager.ready true
     mount_all --late
 
 on post-fs-data
