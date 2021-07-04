@@ -73,3 +73,6 @@ on property:ro.boot.product.hardware.sku=sn100
     chmod 0666 /sys/class/thermal/thermal_message/temp_state
     chown system system /sys/class/thermal/thermal_message/temp_state
 
+    # Touch
+    on boot
+    chown system system /sys/devices/virtual/touch/touch_dev/bump_sample_rate

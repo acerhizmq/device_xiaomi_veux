@@ -53,3 +53,6 @@
 
 # Xiaomi MAC
 /data/vendor/mac_addr(/.*)?                                                    u:object_r:vendor_wifi_vendor_data_file:s0
+
+# Touch Sampling
+/sys/devices/virtual/touch/touch_dev/bump_sample_rate                                               u:object_r:sysfs_htsr:s0

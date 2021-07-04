@@ -26,6 +26,7 @@ import org.lineageos.settings.thermal.ThermalUtils;
 import org.lineageos.settings.refreshrate.RefreshUtils;
 import org.lineageos.settings.utils.FileUtils;
 import org.lineageos.settings.dirac.DiracUtils;
+import org.lineageos.settings.touchsampling.TouchSamplingUtils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
     private static final boolean DEBUG = false;
@@ -45,5 +46,8 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         // Thermal Profiles
         ThermalUtils.startService(context);
         RefreshUtils.startService(context);        
+
+        // High Touch Sampling
+        TouchSamplingUtils.restoreSamplingValue(context);
     }
 }
