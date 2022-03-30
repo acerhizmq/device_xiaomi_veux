@@ -90,9 +90,6 @@ blob_fixups: blob_fixups_user_type = {
     ('odm/etc/build_S88006AA1.prop', 'odm/etc/build_S88007AA1.prop', 'odm/etc/build_S88007EA1.prop', 'odm/etc/build_S88008BA1.prop', 'odm/etc/build_S88106BA1.prop', 'odm/etc/build_S88107BA1.prop'): blob_fixup()
         .regex_replace(r'(?m)^.*marketname.*\n?', '')
         .regex_replace(r'(?m)cert', 'model'),
-    'vendor/etc/camera/camxoverridesettings.txt': blob_fixup()
-        .regex_replace('0x10080', '0')
-        .regex_replace('0x1F', '0x0'),
     'vendor/etc/libnfc-pn557.conf': blob_fixup()
         .call(blob_fixup_merge_files, 'vendor/libnfc-nxp_RF.conf', 'NXP RF', need_tmp_dir=False)
         .regex_replace('pn553', 'nq-nci'),

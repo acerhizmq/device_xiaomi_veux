@@ -434,7 +434,6 @@ vendor/etc/camera/125_Latin.png
 vendor/etc/camera/126_Fantasy.png
 vendor/etc/camera/127_DustDream.png
 vendor/etc/camera/128_MongKok.png
-vendor/etc/camera/camxoverridesettings.txt
 vendor/etc/camera/com.xiaomi.dcal.wu.golden_i
 vendor/etc/camera/com.xiaomi.dcal.wu.golden_ii
 vendor/etc/camera/com.xiaomi.dcal.wu.golden_in_i
