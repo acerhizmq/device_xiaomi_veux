@@ -945,9 +945,6 @@ vendor/bin/pm-proxy
 vendor/bin/pm-service
 vendor/lib64/libperipheral_client.so
 
-# Public libraries
-vendor/etc/public.libraries.txt
-
 # QMI
 vendor/bin/irsc_util
 vendor/bin/qmipriod
