@@ -244,9 +244,6 @@ on property:sys.boot_completed=1
     write /sys/kernel/dload/dload_mode "both"
     write /sys/kernel/dload/emmc_dload 1
 
-on property:persist.vendor.radio.atfwd.start=false
-    stop vendor.atfwd
-
 # corefile limit
 on property:persist.debug.trace=1
     mkdir /data/core 0777 root root
@@ -304,11 +301,6 @@ on property:persist.sys.xtra-daemon.enabled=*
 
 on post-fs-data
     write /data/vendor/radio/copy_complete 1
-
-service vendor.atfwd /vendor/bin/ATFWD-daemon
-    class late_start
-    user system
-    group system radio
 
 service vendor.ril-daemon2 /vendor/bin/hw/rild -c 2
     class main
