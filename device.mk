@@ -244,6 +244,7 @@ PRODUCT_PACKAGES += \
     LineageSDKOverlayVEUX \
     SettingsOverlayVEUX \
     SystemUIOverlayVEUX \
+    NfcOverlayVeux \
     WifiOverlayVEUX
 
 PRODUCT_PACKAGES += \
@@ -254,7 +255,7 @@ PRODUCT_PACKAGES += \
     SettingsProviderOverlay2201116SR \
     SettingsProviderOverlay2201116PG \
     SettingsProviderOverlay2201116PI \
-    SettingsOverlay2201116SR
+    SettingsOverlay2201116SR  
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/overlay/config-odm.xml:$(TARGET_COPY_OUT_ODM)/overlay/config/config.xml \
