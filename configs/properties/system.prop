@@ -9,3 +9,7 @@ audio.service.client_wait_ms=10000
 
 # Marketname
 ro.product.marketname=Redmi Note 11 Pro Plus 5G / Poco X4 Pro 5G
+
+# Log
+log.tag.CHIUSECASE=ERROR
+persist.log.tag.CHIUSECASE=S

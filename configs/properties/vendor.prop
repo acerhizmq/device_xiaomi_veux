@@ -133,6 +133,7 @@ persist.vendor.cam.strip3pjfif=true
 # Names must be <=30 chars (property_get / PROP_NAME_MAX).
 persist.vendor.cam.cname_tag=0x808d0000
 persist.vendor.cam.3pyuv_tag=0x808d0001
+persist.vendor.camera.logInfoMask=false
 
 # Face Unlock
 ro.face.sense_service.camera_id=1
