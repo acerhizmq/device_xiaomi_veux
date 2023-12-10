@@ -65,3 +65,11 @@ on property:ro.boot.product.hardware.sku=sn100
     enable vendor.nfc_hal_service
     enable qti_esepowermanager_service_1_1
     enable secureelement-hal_1_2
+    
+    #zhangxiaodan To realize the communication between framework and thermal, we need to implement sys node in kernel
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0666 /sys/class/thermal/thermal_message/temp_state
+    chown system system /sys/class/thermal/thermal_message/temp_state
+
