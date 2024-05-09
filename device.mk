@@ -146,6 +146,18 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     IFAAService
 
+# Init
+PRODUCT_PACKAGES += \
+    fstab.default \
+    fstab.default.vendor_ramdisk \
+    init.device.rc \
+    init.kernel.post_boot-blair.sh \
+    init.qcom.rc \
+    init.qti.kernel.rc \
+    init.recovery.qcom.rc \
+    init.target.rc \
+    ueventd.qcom.rc
+
 # IPACM
 PRODUCT_PACKAGES += \
     ipacm \
@@ -279,18 +291,6 @@ PRODUCT_COPY_FILES += \
 # QTI fwk-detect
 PRODUCT_PACKAGES += \
     libvndfwk_detect_jni.qti.vendor # Needed by CNE app
-
-# Rootdir
-PRODUCT_PACKAGES += \
-    fstab.default \
-    fstab.default.vendor_ramdisk \
-    init.device.rc \
-    init.kernel.post_boot-blair.sh \
-    init.qcom.rc \
-    init.qti.kernel.rc \
-    init.recovery.qcom.rc \
-    init.target.rc \
-    ueventd.qcom.rc
 
 # Sensors
 PRODUCT_PACKAGES += \
