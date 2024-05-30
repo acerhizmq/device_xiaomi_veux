@@ -99,8 +99,6 @@ blob_fixups: blob_fixups_user_type = {
     'vendor/etc/camera/camxoverridesettings.txt': blob_fixup()
         .regex_replace('0x10080', '0')
         .regex_replace('0x1F', '0x0'),
-    'vendor/etc/init/init.batterysecret.rc': blob_fixup()
-        .regex_replace(r'on charger', r'on property:init.svc.vendor.charger=running'),
     'vendor/etc/libnfc-pn557.conf': blob_fixup()
         .call(blob_fixup_merge_files, 'vendor/libnfc-nxp_RF.conf', 'NXP RF', need_tmp_dir=False)
         .regex_replace('pn553', 'nq-nci'),
