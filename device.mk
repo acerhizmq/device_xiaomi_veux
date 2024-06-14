@@ -83,6 +83,10 @@ $(call soong_config_set,camera,override_format_from_reserved,true)
 # DebugFS
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 
+# DeviceAsWebcam
+PRODUCT_PACKAGES += \
+    DeviceAsWebcam
+
 # Device-specific settings
 PRODUCT_PACKAGES += \
     DSPVolumeSynchronizer
@@ -225,6 +229,7 @@ PRODUCT_PACKAGES += \
     WifiOverlayVEUX
 
 PRODUCT_PACKAGES += \
+    DeviceAsWebcamOverlayVEUX \
     SettingsProviderOverlay2201116SG \
     SettingsProviderOverlay2201116SC \
     SettingsProviderOverlay2201116SI \
