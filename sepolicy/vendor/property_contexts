@@ -6,6 +6,7 @@ persist.vendor.cam.cname_tag          u:object_r:vendor_persist_camera_prop:s0
 persist.vendor.cam.3pyuv_tag          u:object_r:vendor_persist_camera_prop:s0
 vendor.camera.config.level          u:object_r:vendor_camera_prop:s0
 vendor.camera.sensor.               u:object_r:vendor_camera_sensor_prop:s0
+vendor.camera.sensor.logsystem      u:object_r:vendor_camera_prop:s0
 vendor.camera.*                     u:object_r:vendor_camera_prop:s0
 persist.camera.aux.packagelist      u:object_r:vendor_camera_prop:s0
 camera.hal1.packagelist             u:object_r:vendor_camera_prop:s0
