@@ -118,6 +118,12 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('libvendor.goodix.hardware.biometrics.fingerprint@2.1.so', 'vendor.goodix.hardware.biometrics.fingerprint@2.1.so'),
     ('vendor/lib64/libwvhidl.so', 'vendor/lib64/mediadrm/libwvdrmengine.so'): blob_fixup()
         .add_needed('libcrypto_shim.so'),
+    'vendor/etc/libnfc-sn100.conf': blob_fixup()
+        .regex_replace(r'(DEFAULT_ISODEP_ROUTE.*?)0x01', r'\g<1>0xC0')
+        .regex_replace(r'(DEFAULT_SYS_CODE_ROUTE.*?)0x00', r'\g<1>0xC0')
+        .regex_replace(r'(DEFAULT_OFFHOST_ROUTE.*?)0x01', r'\g<1>0xC0')
+        .regex_replace(r'(OFFHOST_ROUTE_ESE.*?)01', r'\g<1>C0')
+        .regex_replace(r'$', r'\nDEFAULT_NFCF_ROUTE=0xC0'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(
