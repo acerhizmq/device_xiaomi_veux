@@ -212,19 +212,8 @@ $(call soong_config_set,lineage_health,charging_control_supports_bypass,false)
 
 # Media
 PRODUCT_PACKAGES += \
-    libOmxAacEnc \
-    libOmxAmrEnc \
-    libOmxCore \
-    libOmxEvrcEnc \
-    libOmxG711Enc \
-    libOmxQcelp13Enc \
-    libavservices_minijail \
-    libavservices_minijail.vendor \
     libcodec2_hidl@1.0.vendor \
-    libcodec2_vndk.vendor \
-    libmm-omxcore \
-    libstagefright_softomx.vendor \
-    libstagefrighthw
+    libcodec2_vndk.vendor
 
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/media,$(TARGET_COPY_OUT_VENDOR)/etc)
