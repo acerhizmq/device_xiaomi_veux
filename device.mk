@@ -214,6 +214,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     FrameworkOverlayVEUX \
+    NcmTetheringOverlay \
     SettingsOverlayVEUX \
     SystemUIOverlayVEUX \
     WifiOverlayVEUX
