@@ -35,3 +35,9 @@ genfscon sysfs /devices/platform/soc/soc:goodix_fp/wakeup u:object_r:sysfs_wakeu
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/power_supply/battery/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/power_supply/usb/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/wakeup u:object_r:sysfs_wakeup:s0
+
+# Display dim layer Exposure
+genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure u:object_r:vendor_sysfs_graphics:s0
+
+# Display HBM
+genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/hbm_enabled u:object_r:vendor_sysfs_graphics:s0

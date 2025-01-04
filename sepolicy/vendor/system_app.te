@@ -1,0 +1,6 @@
+# Parts
+allow system_app sysfs_thermal:file write;
+
+# DC Dimming and HBM
+allow system_app vendor_sysfs_graphics:dir search;
+allow system_app vendor_sysfs_graphics:file { getattr open write };
