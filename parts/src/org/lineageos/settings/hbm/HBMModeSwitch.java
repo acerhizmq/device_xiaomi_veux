@@ -54,13 +54,25 @@ public class HBMModeSwitch implements OnPreferenceChangeListener {
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         Boolean enabled = (Boolean) newValue;
         boolean dcDimmingEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(DcDimmingTileService.DC_DIMMING_ENABLE_KEY, false);
-    	if (dcDimmingEnabled) {
+        if (dcDimmingEnabled) {
             return false;
         }
-        FileUtils.writeLine(getHBM(), enabled ? "1" : "0");
+        
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (enabled) {
+            // Save current brightness level
+            int currentBrightness = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 128);
+            sharedPrefs.edit().putInt("last_brightness", currentBrightness).apply();
+            
+            FileUtils.writeLine(getHBM(), "1");
             FileUtils.writeLine(getBACKLIGHT(), "2047");
             Settings.System.putInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 255);
+        } else {
+            FileUtils.writeLine(getHBM(), "0");
+            
+            // Restore last brightness level
+            int lastBrightness = sharedPrefs.getInt("last_brightness", 128);
+            Settings.System.putInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, lastBrightness);
         }
         return true;
     }
