@@ -32,4 +32,7 @@
         <item>256</item> <!-- "Saturated" -->
         <item>258</item> <!-- "Vivid" -->
     </integer-array>
+
+    <!-- Whether to show a preference item for regulatory information in About phone -->
+    <bool name="config_show_regulatory_info">true</bool>
 </resources>

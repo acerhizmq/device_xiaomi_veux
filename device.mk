@@ -244,7 +244,8 @@ PRODUCT_PACKAGES += \
     SettingsProviderOverlay2201116SI \
     SettingsProviderOverlay2201116SR \
     SettingsProviderOverlay2201116PG \
-    SettingsProviderOverlay2201116PI
+    SettingsProviderOverlay2201116PI \
+    SettingsOverlay2201116SR
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/overlay/config-odm.xml:$(TARGET_COPY_OUT_ODM)/overlay/config/config.xml \
