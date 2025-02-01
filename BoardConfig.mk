@@ -85,7 +85,7 @@ TARGET_KERNEL_SOURCE := kernel/xiaomi/veux
 TARGET_KERNEL_NO_GCC := true
 
 # OTA assert
-TARGET_OTA_ASSERT_DEVICE := peux,veux
+TARGET_OTA_ASSERT_DEVICE := peux|veux
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728
