@@ -230,9 +230,6 @@ on post-fs-data
     #Create dir for TUI
     mkdir /data/vendor/tui 0700 system drmrpc
 
-    #Create dir for dolby
-    mkdir /data/vendor/dolby 0770 media media
-
 on property:sys.boot_completed=1
     #Enable UFS clock scaling back
     write /sys/bus/platform/devices/1d84000.ufshc/clkscale_enable 1
