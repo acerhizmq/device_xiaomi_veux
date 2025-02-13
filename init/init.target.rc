@@ -30,6 +30,7 @@
 import /vendor/etc/init/hw/init.qti.kernel.rc
 
 on early-init
+    setprop ro.boot.hardware.revision ${ro.boot.hwc}_${ro.boot.hwlevel}_${ro.boot.hwversion}
     # Start audio adsp rpc daemon at early init stage
     start vendor.audioadsprpcd_audiopd
 
