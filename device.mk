@@ -168,6 +168,9 @@ PRODUCT_PACKAGES += \
     android.hardware.ir@1.0-impl \
     android.hardware.ir@1.0-service
 
+# Kernel
+PRODUCT_ENABLE_UFFD_GC := true
+
 # Lineage Health
 PRODUCT_PACKAGES += \
     vendor.lineage.health-service.default
