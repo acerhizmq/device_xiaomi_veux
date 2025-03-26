@@ -116,11 +116,17 @@ on boot
     chmod 0644 /sys/bus/platform/devices/soc:fpc1020/wakeup_enable
     chmod 0644 /sys/bus/platform/devices/soc:fpc1020/regulator_enable
     chmod 0644 /sys/bus/platform/devices/soc:fpc1020/compatible_all
-    chown system system /sys/class/thermal/thermal_message/sconfig
 
     mkdir /mnt/vendor/persist/camera 0777 system system
     chmod 0666 /mnt/vendor/persist/camera/rear_dc_cal_wu.bin
     chmod 0666 /data/vendor/camera/com.xiaomi.dcal.wu.data
+
+    #zhangxiaodan To realize the communication between framework and thermal, we need to implement sys node in kernel
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0666 /sys/class/thermal/thermal_message/temp_state
+    chown system system /sys/class/thermal/thermal_message/temp_state
 
 #add perm for calib
     chmod 0777 /data/vendor/camera
@@ -187,3 +193,9 @@ on property:ro.vendor.display.svi=1 && property:sys.boot_completed=1
 on property:sys.boot_completed=1
     # Enable PowerHAL hint processing
     setprop vendor.powerhal.init 1
+
+# Thermal Profiles permissions
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0666 /sys/class/thermal/thermal_message/temp_state
+    chown system system /sys/class/thermal/thermal_message/temp_stat
