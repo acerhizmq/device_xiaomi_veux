@@ -89,6 +89,10 @@ PRODUCT_COPY_FILES += \
 $(call soong_config_set_bool,camera,override_format_from_reserved,true)
 $(call soong_config_set,libcameraservice,ext_lib,libcameraservice_extension.veux)
 
+# CameraX extensions
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/permissions/camerax-vendor-extensions.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/camerax-vendor-extensions.xml
+
 # DebugFS
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 
