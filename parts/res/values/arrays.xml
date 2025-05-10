@@ -14,15 +14,5 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <string-array name="doze_brightness_level">
-        <item>@string/doze_brightness_low</item>
-        <item>@string/doze_brightness_high</item>
-        <item>@string/doze_brightness_adaptive</item>
-    </string-array>
-    <string-array name="doze_brightness_level_mode">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+<resources>  
 </resources>
