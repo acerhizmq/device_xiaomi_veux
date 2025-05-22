@@ -215,6 +215,15 @@ vendor.gralloc.secure_preview_only=1
 # Incremental FS
 ro.incremental.enable=true
 
+# Logcat spam
+persist.log.tag.BackgroundInstallControlService=S
+persist.log.tag.HWUI=S
+persist.log.tag.ConnectivityService=S
+persist.log.tag.vendor.qti.bluetooth@1.0-ibs_handler=S
+persist.log.tag.vendor.qti.bluetooth@1.0-wake_lock=S
+persist.log.tag.AppOps=S
+persist.log.tag.FrameTracker=S
+
 # Media
 debug.stagefright.c2inputsurface=-1
 vendor.media.omx=0
