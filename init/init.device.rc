@@ -29,17 +29,20 @@ on early-init && property:ro.boot.board_id=S88006AA1
     setprop bluetooth.device.default_name "Redmi Note 11 Pro 5G"
     setprop vendor.usb.product_string "Redmi Note 11 Pro 5G"
     setprop ro.boot.product.hardware.sku pn557
+    mount none /product/lost+found /product/app/MobileFeliCaClient/MobileFeliCaClient.apk bind
 
 # Redmi Note 11E Pro
 on early-init && property:ro.boot.board_id=S88007AA1
     setprop bluetooth.device.default_name "Redmi Note 11E Pro"
     setprop vendor.usb.product_string "Redmi Note 11E Pro"
     setprop ro.boot.product.hardware.sku sn100
+    mount none /product/lost+found /product/app/MobileFeliCaClient/MobileFeliCaClient.apk bind
 
 # Redmi Note 11 Pro+ 5G (India)
 on early-init && property:ro.boot.board_id=S88007EA1
     setprop bluetooth.device.default_name "Redmi Note 11 Pro+ 5G"
     setprop vendor.usb.product_string "Redmi Note 11 Pro+ 5G"
+    mount none /product/lost+found /product/app/MobileFeliCaClient/MobileFeliCaClient.apk bind
 
 # Redmi Note 11 Pro 5G (Japan)
 on early-init && property:ro.boot.board_id=S88008BA1
@@ -53,11 +56,13 @@ on early-init && property:ro.boot.board_id=S88106BA1
     setprop bluetooth.device.default_name "POCO X4 Pro 5G"
     setprop vendor.usb.product_string "POCO X4 Pro 5G"
     setprop ro.boot.product.hardware.sku pn557
+    mount none /product/lost+found /product/app/MobileFeliCaClient/MobileFeliCaClient.apk bind
 
 # POCO X4 Pro 5G (India)
 on early-init && property:ro.boot.board_id=S88107BA1
     setprop bluetooth.device.default_name "POCO X4 Pro 5G"
     setprop vendor.usb.product_string "POCO X4 Pro 5G"
+    mount none /product/lost+found /product/app/MobileFeliCaClient/MobileFeliCaClient.apk bind
 
 on property:ro.boot.product.hardware.sku=pn557
     enable vendor.nfc_hal_service

@@ -665,6 +665,7 @@ vendor/lib64/vendor.qti.esepowermanager@1.1.so|759973ec41a5a9d0f0c4bc941a4e51370
 product/priv-app/EuiccGoogle/EuiccGoogle.apk|2d238bfe14473b8f578bf0d4ea61246f61d0f618
 
 # Felica - from veux_jp
+product/app/MobileFeliCaClient/MobileFeliCaClient.apk;PRESIGNED|3ca65781ce1e89d88a169ab5885f04d6b331e14a
 vendor/etc/felica/common.cfg|ca6ccc74d3e115f4f522d670f64ce7d389b18741
 vendor/etc/felica/mfm.cfg|4c373c800a0a09f678b0f09fb9a3226121f02921
 vendor/etc/felica/mfs.cfg|0adfe851cbe62db27c91bcf314bb708b64059af9
