@@ -100,9 +100,6 @@ blob_fixups: blob_fixups_user_type = {
     'vendor/etc/camera/camxoverridesettings.txt': blob_fixup()
         .regex_replace('0x10080', '0')
         .regex_replace('0x1F', '0x0'),
-    'vendor/etc/libnfc-pn557.conf': blob_fixup()
-        .call(blob_fixup_merge_files, 'vendor/libnfc-nxp_RF.conf', 'NXP RF', need_tmp_dir=False)
-        .regex_replace('pn553', 'nq-nci'),
     'vendor/lib64/android.hardware.secure_element@1.0-impl.so': blob_fixup()
         .remove_needed('android.hidl.base@1.0.so'),
     ('vendor/lib64/camera/components/com.qti.node.dewarp.so', 'vendor/lib64/camera/components/com.vidhance.node.processing.so'): blob_fixup()
@@ -119,12 +116,6 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('libvendor.goodix.hardware.biometrics.fingerprint@2.1.so', 'vendor.goodix.hardware.biometrics.fingerprint@2.1.so'),
     ('vendor/lib64/libwvhidl.so', 'vendor/lib64/mediadrm/libwvdrmengine.so'): blob_fixup()
         .add_needed('libcrypto_shim.so'),
-    'vendor/etc/libnfc-sn100.conf': blob_fixup()
-        .regex_replace(r'(DEFAULT_ISODEP_ROUTE.*?)0x01', r'\g<1>0xC0')
-        .regex_replace(r'(DEFAULT_SYS_CODE_ROUTE.*?)0x00', r'\g<1>0xC0')
-        .regex_replace(r'(DEFAULT_OFFHOST_ROUTE.*?)0x01', r'\g<1>0xC0')
-        .regex_replace(r'(OFFHOST_ROUTE_ESE.*?)01', r'\g<1>C0')
-        .regex_replace(r'$', r'\nDEFAULT_NFCF_ROUTE=0xC0'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(
