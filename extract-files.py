@@ -46,10 +46,8 @@ lib_fixups: lib_fixups_user_type = {
     **lib_fixups,
     (
         'com.qualcomm.qti.dpm.api@1.0',
-        'libmmosal',
         'vendor.qti.diaghal@1.0',
         'vendor.qti.hardware.fm@1.0',
-        'vendor.qti.hardware.wifidisplaysession@1.0',
         'vendor.qti.imsrtpservice@3.0',
     ): lib_fixup_vendor_suffix,
 }
@@ -92,10 +90,6 @@ blob_fixups: blob_fixups_user_type = {
     ('odm/etc/build_S88006AA1.prop', 'odm/etc/build_S88007AA1.prop', 'odm/etc/build_S88007EA1.prop', 'odm/etc/build_S88008BA1.prop', 'odm/etc/build_S88106BA1.prop', 'odm/etc/build_S88107BA1.prop'): blob_fixup()
         .regex_replace(r'(?m)^.*marketname.*\n?', '')
         .regex_replace(r'(?m)cert', 'model'),
-    'system_ext/etc/init/wfdservice.rc': blob_fixup()
-        .regex_replace(r'(start|stop) wfdservice\b', r'\1 wfdservice64'),
-    'system_ext/lib64/libwfdnative.so': blob_fixup()
-        .remove_needed('android.hidl.base@1.0.so'),
     'vendor/etc/camera/camxoverridesettings.txt': blob_fixup()
         .regex_replace('0x10080', '0')
         .regex_replace('0x1F', '0x0'),
