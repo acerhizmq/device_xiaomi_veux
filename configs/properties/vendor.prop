@@ -172,6 +172,7 @@ persist.vendor.fingerprint.sensor_location=1080|922|0|local:4630947081618265473
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
 # Graphics
+debug.graphics.game_default_frame_rate.disabled=1
 debug.sf.auto_latch_unsignaled=0
 debug.sf.enable_advanced_sf_phase_offset=1
 debug.sf.enable_gl_backpressure=0
