@@ -59,7 +59,7 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     $(DEVICE_PATH)/device_framework_matrix.xml
 
 DEVICE_MANIFEST_FILE := \
-    $(DEVICE_PATH)/manifest.xml
+    $(DEVICE_PATH)/vintf/manifest.xml
 
 DEVICE_MATRIX_FILE := \
     hardware/qcom-caf/common/compatibility_matrix.xml
@@ -68,7 +68,7 @@ ODM_MANIFEST_SKUS += \
     sn100
 
 ODM_MANIFEST_SN100_FILES := \
-    $(DEVICE_PATH)/manifest_ese.xml
+    $(DEVICE_PATH)/vintf/manifest_ese.xml
 
 # Kernel
 BOARD_KERNEL_BASE := 0x00000000
