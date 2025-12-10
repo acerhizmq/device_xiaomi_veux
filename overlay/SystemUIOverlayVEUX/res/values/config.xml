@@ -44,5 +44,10 @@
 
     <!-- Durum çubuğundaki FPS sayacı için veri yolu -->
     <string name="config_fpsInfoSysNode" translatable="false">/sys/class/drm/sde-crtc-0/measured_fps</string>
+    
+    <!-- Needed for custom rom CPU temp paths -->
+    <string name="config_cpuTempSensor">/sys/class/thermal/thermal_zone28/temp</string>
 
+    <!-- The CPU temperature divider, if needed -->
+    <integer name="config_cpuTempDivider">1000</integer>
 </resources>
