@@ -31,4 +31,10 @@
 
     <!--  Flag to turn on the rendering of the above path or not  -->
     <bool name="config_enableDisplayCutoutProtection">true</bool>
+    
+    <!-- Needed for custom rom CPU temp paths -->
+    <string name="config_cpuTempSensor">/sys/class/thermal/thermal_zone28/temp</string>
+
+    <!-- The CPU temperature divider, if needed -->
+    <integer name="config_cpuTempDivider">1000</integer>
 </resources>
