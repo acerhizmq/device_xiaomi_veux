@@ -87,6 +87,13 @@ def blob_fixup_merge_files(
 
 
 blob_fixups: blob_fixups_user_type = {
+    (
+        'vendor/lib64/libdpps.so',
+        'vendor/lib64/libpowercore.so',
+        'vendor/lib64/libsnapdragoncolor-manager.so',
+        'vendor/lib64/libvideooptfeature.so',
+    ): blob_fixup()
+        .replace_needed('libtinyxml2.so', 'libtinyxml2_1.so'),
     ('odm/etc/build_S88006AA1.prop', 'odm/etc/build_S88007AA1.prop', 'odm/etc/build_S88007EA1.prop', 'odm/etc/build_S88008BA1.prop', 'odm/etc/build_S88106BA1.prop', 'odm/etc/build_S88107BA1.prop'): blob_fixup()
         .regex_replace(r'(?m)^.*marketname.*\n?', '')
         .regex_replace(r'(?m)cert', 'model'),
