@@ -46,6 +46,7 @@ on early-init && property:ro.boot.board_id=S88008BA1
     setprop bluetooth.device.default_name "Redmi Note 11 Pro 5G"
     setprop vendor.usb.product_string "Redmi Note 11 Pro 5G"
     setprop ro.boot.product.hardware.sku sn100
+    setprop masterclear.allow_retain_esim_profiles_after_fdr true
 
 # POCO X4 Pro 5G (Global)
 on early-init && property:ro.boot.board_id=S88106BA1
