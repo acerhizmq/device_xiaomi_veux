@@ -52,7 +52,7 @@ TARGET_SCREEN_DENSITY := 440
 include vendor/oneplus/dolby/BoardConfigDolby.mk
 
 # Filesystem
-TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
+TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/configs/config.fs
 
 # GNSS
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
