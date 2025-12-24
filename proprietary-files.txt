@@ -937,7 +937,7 @@ vendor/lib64/libpn557_fw.so
 
 # NFC - from veux_cn
 vendor/etc/libnfc-nci.conf:vendor/etc/libnfc-nci-sn100.conf|1718bb396eb876128b14cdf47e511461fb620f2b
-vendor/etc/libnfc-qrd-SN100.conf:vendor/etc/libnfc-sn100.conf|31330961a0b825e4f196d5c28f5f048cc91fa86e
+vendor/etc/libnfc-qrd-SN100.conf:vendor/etc/libnfc-sn100.conf|1197d530e4c7ff7a0be563184699f06a0495b067
 vendor/lib/libsn100u_fw.so:vendor/lib64/libsn100u_fw.so|2bc1887b71b4557b75e26465f6917525bfd43e4a
 
 # Neural Networks
@@ -1113,7 +1113,7 @@ vendor/lib64/vendor.qti.hardware.radio.uim_remote_server@1.0.so
 
 # Secure element - from veux_cn
 vendor/bin/hw/vendor.qti.secure_element@1.2-service|7843771977282db89a3bbd1160fe35bcce901127
-vendor/lib64/android.hardware.secure_element@1.0-impl.so|aca8690c4ad25e976b25811fb5328c4a875efec2|a7d75c55306bc5d5afa048dda66a6fa9be19542e
+vendor/lib64/android.hardware.secure_element@1.0-impl.so|a7d75c55306bc5d5afa048dda66a6fa9be19542e
 vendor/lib64/jcos_nq_client.so|22db02f4bcc6e1932ca2a29bc7ee837889e07b02
 vendor/lib64/ls_nq_client.so|d8942d3dbd23e6845aac517f8d739848593b87c7
 vendor/lib64/se_nq_extn_client.so|df7a377b826b6ed2a68059504962ac517939d4d1
