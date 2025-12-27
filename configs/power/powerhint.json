@@ -536,6 +536,18 @@
       "Value": "1497600000"
     },
     {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "CPULittleClusterMinFreq",
+      "Duration": 100,
+      "Value": "1324800"
+    },
+    {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "CPUBWMinFreq",
+      "Duration": 100,
+      "Value": "7980"
+    },
+    {
       "PowerHint": "DOUBLE_TAP_TO_WAKE",
       "Node": "DoubleTapToWake",
       "Duration": 0,
