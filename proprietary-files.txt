@@ -564,7 +564,7 @@ vendor/etc/display/DPU720.xml|4e54e8712d65773eb87867bf64a4cb98ea9bb8c3
 vendor/etc/display/DPU7__.xml|c056f3cb9fa123ca3de5b2a9775c184dddf25b9d
 vendor/lib64/libdisplayqos.so|aa222f4c1a2d2fb60944c44f8a82621d6bc75184
 vendor/lib64/libdisplayskuutils.so|d467f3bcaeafa6ed9de62afe2c00a3be46f4bb0f
-vendor/lib64/libdpps.so|b7d8458a66fd8510a7a490c1eebd3bac3fb159ec
+vendor/lib64/libdpps.so|ad005b5c92ec0834e33d1614c203b2e0f36fc804
 vendor/lib64/libhdr_tm.so|7954c5cd5c0b23fe8d0609361c22d24c59f1448b
 vendor/lib64/libqrtrclient.so|51c55fea28fa475ae9b2c64592f32802e6ba6c25
 vendor/lib64/libqseed3.so|d62c37baf259250cadfcff8734e82054ed87bb96
@@ -1139,7 +1139,7 @@ vendor/lib64/sensors.ssc.so
 vendor/lib64/sensors.touch.detect.so
 
 # Sensors - from ruby
-vendor/lib64/libnotifyaudiohal.so;FIX_SONAME|a02f3e44bb5e84760925722ae3e9c66957e94c9d|fe4ea475de5a45ee1c1ebb0f4c05c2a6827b53f8
+vendor/lib64/libnotifyaudiohal.so;FIX_SONAME|fe4ea475de5a45ee1c1ebb0f4c05c2a6827b53f8
 
 # Sensors configs
 vendor/etc/sensors/config/holi_default_sensors.json
