@@ -10,3 +10,6 @@ git clone https://github.com/frost-testzone/vendor_xiaomi_miuicamera-veux.git ve
 
 # Sign keys
 git clone https://github.com/ProjectInfinity-X/vendor_infinity-priv_keys vendor/infinity-priv/keys
+
+# Dolby
+git clone https://github.com/oscaro-resources/hardware_dolby.git hardware/dolby
