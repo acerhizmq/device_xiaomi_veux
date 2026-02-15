@@ -1,2 +1,0 @@
-# Audio service timeout
-audio.service.client_wait_ms=10000
