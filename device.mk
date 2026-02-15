@@ -109,6 +109,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/display/displayconfig.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630947081618265473.xml
 
+# DSPVolumeSynchronizer
+PRODUCT_PACKAGES += \
+    DSPVolumeSynchronizer
+
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
