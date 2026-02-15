@@ -4,4 +4,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/custom_veux.mk
+    $(LOCAL_DIR)/infinity_veux.mk

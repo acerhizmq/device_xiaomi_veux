@@ -11,8 +11,15 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from device.
 $(call inherit-product, $(LOCAL_PATH)/device.mk)
 
-# Inherit some common PixelOS stuff.
-$(call inherit-product, vendor/custom/config/common_full_phone.mk)
+# Inherit some common Infinity-X stuff.
+$(call inherit-product, vendor/infinity/config/common_full_phone.mk)
+
+# Infinity-X flags
+WITH_GAPPS := true
+TARGET_SUPPORTS_BLUR := true
+INFINITY_MAINTAINER := SdmDeveloper
+INFINITY_BUILD_TYPE := OFFICIAL
+USE_MOTO_CALCULATOR := true
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400

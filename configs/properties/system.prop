@@ -1,2 +1,11 @@
+# AboutPhone Info
+ro.infinity.soc=Snapdragon 695
+ro.infinity.battery=5000 mAh
+ro.infinity.display=1080 x 2400, 120 Hz
+ro.infinity.camera=108MP + 8MP + 2MP
+
 # Audio service timeout
 audio.service.client_wait_ms=10000
+
+# Marketname
+ro.product.marketname=Redmi Note 11 Pro Plus 5G / Poco X4 Pro 5G
