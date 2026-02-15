@@ -7,3 +7,6 @@ git clone https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX.git
 
 # MiuiCamera
 git clone https://github.com/frost-testzone/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux
+
+# Sign keys
+git clone https://github.com/ProjectInfinity-X/vendor_infinity-priv_keys vendor/infinity-priv/keys
