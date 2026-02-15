@@ -420,6 +420,9 @@ ODM_MANIFEST_SKUS += \
 ODM_MANIFEST_SN100_FILES := \
     $(LOCAL_PATH)/vintf/manifest_ese.xml
 
+# ViPER4AndroidFX
+$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+
 # WiFi
 PRODUCT_PACKAGES += \
     android.hardware.wifi-service \
