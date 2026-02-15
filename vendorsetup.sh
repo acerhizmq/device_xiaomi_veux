@@ -4,3 +4,6 @@ git clone https://github.com/LineageOS/android_hardware_xiaomi.git hardware/xiao
 
 # Viper4Android
 git clone https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX.git -b v4a packages/apps/ViPER4AndroidFX
+
+# MiuiCamera
+git clone https://github.com/frost-testzone/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux

@@ -194,6 +194,9 @@ PRODUCT_PACKAGES += \
 
 $(call soong_config_set_bool,livedisplay_sdm,enable_dm,false)
 
+# MiuiCamera
+$(call inherit-product, vendor/xiaomi/miuicamera-veux/MiuiCamera-veux.mk)
+
 # Media
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/configs/media,$(TARGET_COPY_OUT_VENDOR)/etc)
