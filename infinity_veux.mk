@@ -17,8 +17,8 @@ $(call inherit-product, vendor/infinity/config/common_full_phone.mk)
 # Infinity-X flags
 WITH_GAPPS := true
 TARGET_SUPPORTS_BLUR := true
-INFINITY_MAINTAINER := SdmDeveloper
-INFINITY_BUILD_TYPE := OFFICIAL
+INFINITY_MAINTAINER := Acerhizm
+INFINITY_BUILD_TYPE := UNOFFICIAL
 USE_MOTO_CALCULATOR := true
 
 # Boot animation
