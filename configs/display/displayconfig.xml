@@ -14,6 +14,7 @@
     </screenBrightnessMap>
 
     <screenBrightnessRampIncreaseMaxMillis>2000</screenBrightnessRampIncreaseMaxMillis>
+    <screenBrightnessRampDecreaseMaxMillis>20000</screenBrightnessRampDecreaseMaxMillis>
 
     <ambientBrightnessChangeThresholds>
         <brighteningThresholds>
@@ -29,6 +30,6 @@
 
     <screenBrightnessRampFastDecrease>0.7047244</screenBrightnessRampFastDecrease>
     <screenBrightnessRampFastIncrease>0.7047244</screenBrightnessRampFastIncrease>
-    <screenBrightnessRampSlowDecrease>0.05</screenBrightnessRampSlowDecrease>
+    <screenBrightnessRampSlowDecrease>0.024</screenBrightnessRampSlowDecrease>
     <screenBrightnessRampSlowIncrease>0.05</screenBrightnessRampSlowIncrease>
 </displayConfiguration>
