@@ -1,0 +1,19 @@
+[
+  {
+    "repository": "LineageOS/android_hardware_xiaomi",
+    "target_path": "hardware/xiaomi",
+    "branch": "lineage-23.0"
+  },
+  {
+    "repository": "Project-Astraverse/vendor_xiaomi_veux",
+    "target_path": "vendor/xiaomi/veux"
+  },
+  {
+    "repository": "Project-Astraverse/kernel_xiaomi_veux",
+    "target_path": "kernel/xiaomi/veux"
+  }
+  {
+    "repository": "Project-Astraverse/vendor_xiaomi_miuicamera-veux",
+    "target_path": "vendor/xiaomi/miuicamera-veux"
+  }
+]
