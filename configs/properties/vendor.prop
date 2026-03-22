@@ -119,6 +119,10 @@ vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.line
 persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.lineageos.aperture,org.lineageos.aperture.dev
 persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam
 persist.vendor.camera.HAL3.enabled=1
+persist.vendor.camera.multicamera.sat.id=0,3
+# Force HAL1 for VoIP and Social Apps to prevent cameraserver crashes during lens swaps
+camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
+vendor.camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
 
 # Dalvik
 dalvik.vm.dex2oat64.enabled=true
