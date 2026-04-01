@@ -422,8 +422,8 @@
     <ctl name="MBHC ChMap" value="ZERO" />
     <ctl name="SEC_MI2S_RX_VI_FB_MUX" value="ZERO" />
     <!-- Volume controls -->
-    <ctl name="WSA_RX0 Digital Volume" value="84" />
-    <ctl name="WSA_RX1 Digital Volume" value="84" />
+    <ctl name="WSA_RX0 Digital Volume" value="90" />
+    <ctl name="WSA_RX1 Digital Volume" value="90" />
     <ctl name="RX_RX0 Digital Volume" value="84" />
     <ctl name="RX_RX1 Digital Volume" value="84" />
     <ctl name="RX_RX2 Digital Volume" value="84" />

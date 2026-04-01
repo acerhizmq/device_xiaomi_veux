@@ -1,0 +1,5 @@
+# IMEI
+set_prop(rild, vendor_deviceid_prop)
+
+# RIL
+set_prop(rild, vendor_rild_prop)

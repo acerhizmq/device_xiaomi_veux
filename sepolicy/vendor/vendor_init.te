@@ -1,2 +1,18 @@
 # Fingerprint
 set_prop(vendor_init, vendor_fp_prop)
+
+# Camera
+set_prop(vendor_init, vendor_camera_prop)
+
+# Display
+set_prop(vendor_init, vendor_display_prop)
+
+# SSR
+set_prop(vendor_init, vendor_ssr_prop)
+
+# System
+set_prop(vendor_init, vendor_system_prop)
+
+# Torch
+allow vendor_init sysfs_torch:file { write open getattr };
+get_prop(vendor_init, acer_flashlight_prop)

@@ -1,0 +1,9 @@
+cc_library_static {
+    name: "libcameraservice_extension.veux",
+    srcs: ["CameraProviderExtension.cpp"],
+    shared_libs: [
+        "libbase",
+        "liblog",
+    ],
+    export_include_dirs: ["."],
+}

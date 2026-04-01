@@ -5,6 +5,15 @@
 
 DEVICE_PATH := device/xiaomi/veux
 
+# Force inclusion of Lineage SEPolicy
+LINEAGE_BUILD := true
+
+# Allow vendor binaries to be copied via PRODUCT_COPY_FILES without triggering ELF check errors
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
+# Allow non-vendor-prefixed properties in vendor property_contexts
+BUILD_BROKEN_VENDOR_PROPERTY_NAMESPACE := true
+
 # A/B
 AB_OTA_PARTITIONS := \
     boot \
@@ -85,8 +94,9 @@ BOARD_KERNEL_CMDLINE := \
     firmware_class.path=/vendor/firmware
 
 TARGET_KERNEL_CONFIG := vendor/veux-qgki_defconfig
-TARGET_KERNEL_SOURCE := kernel/xiaomi/sm6375
+TARGET_KERNEL_SOURCE := kernel/xiaomi/veux
 TARGET_KERNEL_NO_GCC := true
+
 
 # OTA assert
 TARGET_OTA_ASSERT_DEVICE := peux,veux
@@ -147,7 +157,6 @@ VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 # SELinux
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 include device/lineage/sepolicy/libperfmgr/sepolicy.mk
-include vendor/xiaomi/miuicamera-veux/SEPolicy-veux.mk
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
@@ -177,3 +186,9 @@ WIFI_HIDL_FEATURE_AWARE := true
 WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
+
+PRODUCT_SOONG_NAMESPACES += \
+    hardware/qcom-caf/bt/libbt-vendor
+
+# Include Lineage/Lunaris board configurations to export variables to Soong
+include vendor/lineage/config/BoardConfigLineage.mk

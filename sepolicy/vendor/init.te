@@ -1,0 +1,4 @@
+allow init system_file:file mounton;
+allow init sysfs_torch:file { write open getattr }; 
+get_prop(vendor_init, acer_flashlight_prop)
+get_prop(init, acer_flashlight_prop)

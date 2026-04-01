@@ -1,0 +1,3 @@
+allow vendor_timeservice_app vendor_time_prop:file { read open getattr map };
+
+get_prop(vendor_timeservice_app, vendor_time_prop)

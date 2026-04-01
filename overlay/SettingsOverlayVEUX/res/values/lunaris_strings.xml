@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="lunaris_device_message">Redmi Note 11 Pro 5G / POCO X4 Pro</string>
+    <string name="lunaris_processor_code_message">Snapdragon® 695</string>
+    <string name="lunaris_battery_type_message">5000 mAh</string>
+    <string name="lunaris_screen_message">Amoled 120Hz</string>
+</resources>

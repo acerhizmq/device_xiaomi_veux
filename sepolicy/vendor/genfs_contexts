@@ -20,6 +20,9 @@ genfscon sysfs /devices/platform/soc/4c90000.i2c/i2c-3/3-004e/tcpc/type_c_port0/
 genfscon sysfs /devices/platform/soc/soc:xm_pd_adapter/Charging_Adapter/pd_adapter u:object_r:vendor_sysfs_usbpd_device:s0
 
 # Wakeup nodes
+genfscon sysfs /devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength u:object_r:sysfs_torch:s0
+genfscon sysfs /devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@1/torch_strength u:object_r:sysfs_torch:s0
+genfscon sysfs /devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@3/torch_strength u:object_r:sysfs_torch:s0
 genfscon sysfs /devices/platform/soc/4a80000.i2c/i2c-4/4-0055/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/4a80000.i2c/i2c-4/4-005a/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/4a80000.i2c/i2c-4/4-0066/wakeup u:object_r:sysfs_wakeup:s0
@@ -29,9 +32,15 @@ genfscon sysfs /devices/platform/soc/4c90000.i2c/i2c-3/3-004e/tcpc/type_c_port0/
 genfscon sysfs /devices/platform/soc/4c90000.i2c/i2c-3/3-004e/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/4c90000.i2c/i2c-3/3-0066/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/4c90000.i2c/i2c-3/3-006a/wakeup u:object_r:sysfs_wakeup:s0
+
 # note: Labelling /devices/platform/soc/soc:fpc1020/wakeup relabels the wakeup_enable node
 genfscon sysfs /devices/platform/soc/soc:fpc1020/wakeup/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:goodix_fp/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/power_supply/battery/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/power_supply/usb/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/wakeup u:object_r:sysfs_wakeup:s0
+
+# LiveDisplay (HBM)
+genfscon sysfs /class/drm/card0-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
+genfscon sysfs /class/drm/sde-conn-1-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
+genfscon sysfs /class/drm/sde-conn-0-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
