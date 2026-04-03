@@ -88,10 +88,6 @@ PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 PRODUCT_PACKAGES += \
     DeviceAsWebcam
 
-# Device-specific settings
-PRODUCT_PACKAGES += \
-    DSPVolumeSynchronizer
-
 # Display
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.display.composer-service \
