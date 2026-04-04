@@ -105,9 +105,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/display/displayconfig.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630947081618265473.xml
 
-# Dolby
-$(call inherit-product, vendor/oneplus/dolby/dolby.mk)
-
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
@@ -381,11 +378,9 @@ PRODUCT_COPY_FILES += \
 # VINTF
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
-    hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml \
-    vendor/oneplus/dolby/vintf/dolby_framework_compatibility_matrix.xml
+    hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml 
 
 DEVICE_MANIFEST_FILE := \
-    vendor/oneplus/dolby/vintf/dolby_manifest.xml \
     $(LOCAL_PATH)/vintf/manifest.xml
 
 DEVICE_MATRIX_FILE := \
