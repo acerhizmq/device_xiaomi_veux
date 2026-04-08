@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Veux Device APN Configuration
+     Jio (Reliance Jio Infocomm) requires both jionet (data) and ims (VoLTE)
+     APNs to be present. Without the ims APN, IMS registration fails entirely
+     and Jio data shows connected but passes no traffic.
+
+     Jio MCC: 405
+     Jio MNC range: 840, 854-874 (circle-based allocation)
+-->
+<apns version="8">
+
+    <!-- ================================================================
+         JIO (Reliance Jio Infocomm) - MNC 840
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="840"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="840"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 854
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="854"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="854"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 855
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="855"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="855"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 856
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="856"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="856"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 857
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="857"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="857"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 858
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="858"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="858"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 859
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="859"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="859"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 860
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="860"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="860"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 861
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="861"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="861"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 862
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="862"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="862"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 863
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="863"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="863"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 864
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="864"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="864"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 865
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="865"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="865"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 866
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="866"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="866"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 867
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="867"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="867"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 868
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="868"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="868"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 869
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="869"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="869"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 870
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="870"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="870"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 871
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="871"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="871"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 872 (RJIL legacy)
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="872"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="872"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 873
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="873"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="873"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+    <!-- ================================================================
+         JIO - MNC 874 (primary/most common)
+    ================================================================ -->
+    <apn carrier="Jio"
+        mcc="405" mnc="874"
+        apn="jionet"
+        type="default,supl,ia"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="0"
+        modem_cognitive="true"
+        user_visible="true" />
+
+    <apn carrier="Jio IMS"
+        mcc="405" mnc="874"
+        apn="ims"
+        type="ims"
+        protocol="IPV4V6"
+        roaming_protocol="IPV4V6"
+        bearer_bitmask="LTE|NR"
+        profile_id="2"
+        modem_cognitive="true"
+        user_visible="false" />
+
+</apns>

@@ -19,7 +19,7 @@ persist.vendor.audio.voicecall.speaker.stereo=true
 ro.config.vc_call_vol_steps=11
 ro.vendor.audio.sdk.fluencetype=fluence
 ro.vendor.audio.sdk.ssr=false
-vendor.audio.adm.buffering.ms=12
+vendor.audio.adm.buffering.ms=2
 vendor.audio.chk.cal.spk=2
 vendor.audio.chk.cal.us=2
 vendor.audio.feature.a2dp_offload.enable=true
@@ -112,13 +112,14 @@ ro.vendor.bluetooth.wipower=false
 
 # Camera
 camera.disable_zsl_mode=true
-vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera
-persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera
-persist.vendor.camera.multicamera.sat.id=0,3
+camera.force_snaps_on_shutter_denoise=false
+vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.lineageos.aperture,org.lineageos.aperture.dev
+persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.lineageos.aperture,org.lineageos.aperture.dev
+persist.vendor.camera.HAL3.enabled=1
+vendor.camera.lowpower.record.enable=0
+persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam
 
-# Force HAL1 for VoIP and Social Apps to prevent cameraserver crashes during lens swaps
-camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
-vendor.camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
+
 # Dalvik
 dalvik.vm.dex2oat64.enabled=true
     
@@ -200,6 +201,7 @@ ro.incremental.enable=true
 
 # Media
 debug.stagefright.c2inputsurface=-1
+vendor.media.omx=0
 vendor.media.target_variant=_blair
 vendor.netflix.bsp_rev=Q4350-32962-1
 
@@ -218,6 +220,10 @@ persist.vendor.radio.rat_on=combine
 persist.vendor.radio.sib16_support=1
 ro.telephony.default_network=26,26
 persist.vendor.radio.adb_log_on=0
+# Jio (India) LTE-only network data reporting
+# Ensures modem correctly signals data call status changes for IMS registration
+persist.vendor.radio.data_ltd_sys_ind=1
+persist.vendor.radio.data_con_rprt=1
 persist.vendor.radio.aplog_mask=0
 persist.vendor.radio.snapshot_enabled=0
 persist.vendor.radio.snapshot_timer=0

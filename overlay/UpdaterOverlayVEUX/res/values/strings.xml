@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: gutsv / acerhizm
+     SPDX-License-Identifier: Apache-2.0
+
+     OTA Backend: Custom Node.js/Express server (romapi.gutsv.xyz)
+     Scans Google Drive automatically, generates dynamic JSON for Lunaris Updater.
+-->
+<resources>
+    <!-- GMS (with Google Apps) OTA endpoint -->
+    <string name="updater_server_url" translatable="false">https://romapi.gutsv.xyz/api/v1/ota/veux</string>
+    <!-- Vanilla (FOSS) OTA endpoint - same backend -->
+    <string name="updater_server_url_vanilla" translatable="false">https://romapi.gutsv.xyz/api/v1/ota/veux</string>
+</resources>
