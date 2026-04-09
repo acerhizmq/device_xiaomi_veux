@@ -25,7 +25,7 @@
       "Name": "CPUBigClusterMinFreq",
       "Path": "/sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq",
       "Values": ["9999999", "2054400", "1651200", "1516800", "1401600", "1228800", "691200", "0"],
-      "DefaultIndex": 5,
+      "DefaultIndex": 6,
       "ResetOnInit": true
     },
     {
@@ -65,8 +65,8 @@
     {
       "Name": "GPUMinFreq",
       "Path": "/sys/class/kgsl/kgsl-3d0/devfreq/min_freq",
-      "Values": ["840000000", "650000000", "266000000"],
-      "DefaultIndex": 2,
+      "Values": ["840000000", "650000000", "443000000", "266000000"],
+      "DefaultIndex": 3,
       "ResetOnInit": true
     },
     {
@@ -243,7 +243,7 @@
       "PowerHint": "INTERACTION",
       "Node": "GPUMinFreq",
       "Duration": 500,
-      "Value": "650000000"
+      "Value": "443000000"
     },
     {
       "PowerHint": "LAUNCH",
@@ -252,86 +252,80 @@
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "CPUBigClusterMaxFreq",
-      "Duration": 1500,
+      "Node": "CPUBigClusterMinFreq",
+      "Duration": 1000,
       "Value": "9999999"
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "CPUBigClusterMinFreq",
-      "Duration": 1500,
-      "Value": "1651200"
-    },
-    {
-      "PowerHint": "LAUNCH",
       "Node": "CPULittleClusterMinFreq",
-      "Duration": 1500,
-      "Value": "1324800"
+      "Duration": 1000,
+      "Value": "9999999"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "UclampTAMin",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "50"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "UclampFgMin",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "30"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "UclampFgWinMin",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "30"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "UclampTALatency",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "1"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "CPUBWMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "7980"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "CPUDDRLatLittleMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "7980"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "CPUDDRLatBigMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "7980"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "CPUDDRLatfloorLittleMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "7980"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "CPUDDRLatfloorBigMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "7980"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "L3LittleClusterMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "1497600000"
     },
     {
       "PowerHint": "LAUNCH",
       "Node": "L3BigClusterMinFreq",
-      "Duration": 1500,
+      "Duration": 1000,
       "Value": "1497600000"
     },
     {
