@@ -154,7 +154,7 @@ public final class ThermalUtils {
             state = STATE_DEFAULT;
         } else {
             // derive a default state based on package name
-            state = getDefaultStateForPackage(packageName);
+           state = STATE_DEFAULT;
         }
 
         return state;
