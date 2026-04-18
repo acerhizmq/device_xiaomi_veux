@@ -263,4 +263,10 @@ on property:sys.boot_completed=1
 on boot
 # MK9 - Fener parlaklık dosyası için okuma/yazma izinleri
     chown system system /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength
-    chmod 0666 /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength   
+    chmod 0666 /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength
+
+# 464XLAT workaround: Qualcomm RIL disables 464XLAT on IPv6-only carrier networks (e.g. Jio).
+# Re-enable it by watching for the property being set to false and overriding it.
+# See: https://android.googlesource.com/platform/system/netd/+/refs/tags/android-16.0.0_r4/server/netd.rc#35
+on property:persist.vendor.net.doxlat=false
+    setprop persist.vendor.net.doxlat true

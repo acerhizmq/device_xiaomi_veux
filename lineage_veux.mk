@@ -21,7 +21,8 @@ WITH_BCR := true
 # Display and specific Lunaris settings
 TARGET_CUSTOM_UDFPS := false
 TARGET_OPTIMIZED_DEXOPT := true
-TARGET_SUPPORTED_REFRESH_RATES := 60,90,120
+TARGET_SUPPORTED_REFRESH_RATES := 60,120
+SURFACE_FLINGER_BOOST := true
 HBM_SUPPORTED := true
 HBM_NODE := /sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv
 PRODUCT_NO_CAMERA := false
