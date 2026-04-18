@@ -531,4 +531,10 @@
     <integer translatable="false" name="config_brightness_ramp_rate_fast">246</integer>
     <integer translatable="false" name="config_brightness_ramp_rate_slow">123</integer>
 
+
+    <string-array name="config_ignoredCameraIds" translatable="false">
+        <item>4</item>
+        <item>6</item>
+    </string-array>
+
 </resources>
