@@ -76,3 +76,70 @@ on property:ro.boot.product.hardware.sku=sn100
     enable vendor.nfc_hal_service
     enable qti_esepowermanager_service_1_1
     enable secureelement-hal_1_2
+
+    #zhangxiaodan To realize the communication between framework and thermal, we need to implement sys node in kernel
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0666 /sys/class/thermal/thermal_message/temp_state
+    chown system system /sys/class/thermal/thermal_message/temp_state
+
+    # Allow system to modify swappiness
+    chown system system /proc/sys/vm/swappiness
+    chmod 0660 /proc/sys/vm/swappiness
+
+    # Allow Core Control
+    chown system system /sys/devices/system/cpu/cpu0/online
+    chown system system /sys/devices/system/cpu/cpu1/online
+    chown system system /sys/devices/system/cpu/cpu2/online
+    chown system system /sys/devices/system/cpu/cpu3/online
+    chown system system /sys/devices/system/cpu/cpu4/online
+    chown system system /sys/devices/system/cpu/cpu5/online
+    chown system system /sys/devices/system/cpu/cpu6/online
+    chown system system /sys/devices/system/cpu/cpu7/online
+    chmod 0660 /sys/devices/system/cpu/cpu0/online
+    chmod 0660 /sys/devices/system/cpu/cpu1/online
+    chmod 0660 /sys/devices/system/cpu/cpu2/online
+    chmod 0660 /sys/devices/system/cpu/cpu3/online
+    chmod 0660 /sys/devices/system/cpu/cpu4/online
+    chmod 0660 /sys/devices/system/cpu/cpu5/online
+    chmod 0660 /sys/devices/system/cpu/cpu6/online
+    chmod 0660 /sys/devices/system/cpu/cpu7/online
+  
+    # Kernel Manager
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/scaling_governor
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq
+
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy6/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy6/scaling_max_freq
+
+    # GPU Manager
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/governor
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+    chown system system /sys/class/kgsl/kgsl-3d0/force_clk_on
+    chown system system /sys/class/kgsl/kgsl-3d0/force_bus_on
+    chown system system /sys/class/kgsl/kgsl-3d0/force_rail_on
+    chown system system /sys/class/kgsl/kgsl-3d0/force_no_nap
+    chown system system /sys/class/kgsl/kgsl-3d0/bus_split
+
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/governor
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/force_clk_on
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/force_bus_on
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/force_rail_on
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/force_no_nap
+    chmod 0664 /sys/class/kgsl/kgsl-3d0/bus_split
+
+    # Touch
+    on boot
+    chown system system /sys/devices/virtual/touch/touch_dev/bump_sample_rate

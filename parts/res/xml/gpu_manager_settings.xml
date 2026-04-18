@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/gpu_manager_title">
+
+    <!-- GPU Information -->
+    <PreferenceCategory android:title="@string/gpu_info_category">
+        <Preference
+            android:key="gpu_model"
+            android:title="@string/gpu_model_title"
+            android:selectable="false" />
+        <Preference
+            android:key="gpu_current_freq"
+            android:title="@string/gpu_current_freq_title"
+            android:selectable="false" />
+        <Preference
+            android:key="gpu_busy_percentage"
+            android:title="@string/gpu_busy_percentage_title"
+            android:selectable="false" />
+        <Preference
+            android:key="gpu_temperature"
+            android:title="@string/gpu_temp_title"
+            android:selectable="false" />
+    </PreferenceCategory>
+
+    <!-- GPU Governor -->
+    <PreferenceCategory android:title="@string/gpu_governor_title">
+        <ListPreference
+            android:key="gpu_governor"
+            android:title="@string/gpu_governor_title"
+            android:summary="@string/gpu_governor_summary" />
+    </PreferenceCategory>
+
+    <!-- GPU Frequencies -->
+    <PreferenceCategory android:title="@string/gpu_freq_title">
+        <ListPreference
+            android:key="gpu_min_freq"
+            android:title="@string/gpu_min_freq_title" />
+        <ListPreference
+            android:key="gpu_max_freq"
+            android:title="@string/gpu_max_freq_title" />
+    </PreferenceCategory>
+
+    <!-- Power Settings -->
+    <PreferenceCategory android:title="@string/gpu_power_title">
+        <SwitchPreferenceCompat
+            android:key="gpu_force_clk_on"
+            android:title="@string/gpu_force_clk_on_title"
+            android:summary="@string/gpu_force_clk_on_summary" />
+        <SwitchPreferenceCompat
+            android:key="gpu_force_bus_on"
+            android:title="@string/gpu_force_bus_on_title"
+            android:summary="@string/gpu_force_bus_on_summary" />
+        <SwitchPreferenceCompat
+            android:key="gpu_force_rail_on"
+            android:title="@string/gpu_force_rail_on_title"
+            android:summary="@string/gpu_force_rail_on_summary" />
+        <SwitchPreferenceCompat
+            android:key="gpu_force_no_nap"
+            android:title="@string/gpu_force_no_nap_title"
+            android:summary="@string/gpu_force_no_nap_summary" />
+        <SwitchPreferenceCompat
+            android:key="gpu_bus_split"
+            android:title="@string/gpu_bus_split_title"
+            android:summary="@string/gpu_bus_split_summary" />
+    </PreferenceCategory>
+
+    <!-- Thermal Settings -->
+    <PreferenceCategory android:title="@string/gpu_thermal_title">
+        <Preference
+            android:key="gpu_thermal_pwrlevel"
+            android:title="@string/gpu_thermal_pwrlevel_title"
+            android:summary="@string/gpu_thermal_pwrlevel_summary"
+            android:selectable="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="apply_gpu_settings"
+            android:title="@string/apply_settings"
+            android:summary="Apply current GPU settings" />
+        <Preference
+            android:key="reset_gpu_settings"
+            android:title="@string/reset_settings"
+            android:summary="Reset all GPU settings to default values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/kernel_info_category">
+        <Preference
+            android:title="@string/gpu_info_title"
+            android:summary="@string/gpu_info_summary"
+            android:selectable="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

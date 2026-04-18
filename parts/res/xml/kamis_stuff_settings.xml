@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/kamis_stuff_title">
+
+    <Preference
+        android:key="core_control"
+        android:title="@string/core_control_title"
+        android:summary="@string/core_control_summary"
+        android:icon="@drawable/ic_cpu" />
+
+    <Preference
+        android:key="zram"
+        android:title="@string/zram_size_title"
+        android:summary="@string/zram_summary"
+        android:icon="@drawable/ic_zram" />
+
+    <Preference
+    	android:key="useless"
+    	android:title="@string/useless_mode_title"
+    	android:summary="@string/useless_mode_summary"
+    	android:icon="@drawable/ic_useless" />
+
+    <Preference
+        android:key="kernel_manager"
+        android:title="@string/kernel_manager_title"
+        android:summary="@string/kernel_manager_summary"
+        android:icon="@drawable/ic_kernel_manager" />
+
+    <Preference
+        android:key="gpu_manager"
+        android:title="@string/gpu_manager_title"
+        android:summary="@string/gpu_manager_summary"
+        android:icon="@drawable/ic_gpu_manager" />
+
+</PreferenceScreen>

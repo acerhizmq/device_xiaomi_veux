@@ -18,6 +18,7 @@
 package org.lineageos.settings;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -29,10 +30,17 @@ import android.os.SystemProperties;
 import androidx.preference.PreferenceManager;
 import android.view.Display;
 import android.view.Display.HdrCapabilities;
+import android.database.ContentObserver;
+import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 
-import org.lineageos.settings.doze.DozeUtils;
 import org.lineageos.settings.thermal.ThermalUtils;
+import org.lineageos.settings.resolution.ResolutionUtils;
 import org.lineageos.settings.refreshrate.RefreshUtils;
+import org.lineageos.settings.utils.FileUtils;
+import org.lineageos.settings.dirac.DiracUtils;
+import org.lineageos.settings.touchsampling.TouchSamplingUtils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
     private static final boolean DEBUG = false;
@@ -42,10 +50,22 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         if (DEBUG)
             Log.d(TAG, "Received boot completed intent");
-        DozeUtils.onBootCompleted(context);
+
+        // Dirac
+        try {
+            DiracUtils.getInstance(context);
+        } catch (Exception e) {
+            Log.d(TAG, "Dirac is not present in system");
+        }
+        // Thermal Profiles
         ThermalUtils.startService(context);
         RefreshUtils.startService(context);
         overrideHdrTypes(context);
+        // Per-App-Resolution
+        ResolutionUtils.startService(context);
+        
+        // High Touch Sampling
+        TouchSamplingUtils.restoreSamplingValue(context);
     }
 
     private static void overrideHdrTypes(Context context) {

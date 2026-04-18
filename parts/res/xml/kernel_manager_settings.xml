@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/kernel_manager_title">
+
+    <PreferenceCategory android:title="@string/cpu_governor_title">
+        <ListPreference
+            android:key="cpu_governor"
+            android:title="@string/cpu_governor_title"
+            android:summary="@string/cpu_governor_summary" />
+    </PreferenceCategory>
+
+    <!-- Efficiency Cluster -->
+    <PreferenceCategory android:title="@string/efficiency_cluster_title">
+        <ListPreference
+            android:key="efficiency_min_freq"
+            android:title="@string/cpu_min_freq_title" />
+        <ListPreference
+            android:key="efficiency_max_freq"
+            android:title="@string/cpu_max_freq_title" />
+    </PreferenceCategory>
+    
+    <!-- Performance Cluster -->
+    <PreferenceCategory android:title="@string/performance_cluster_title">
+        <ListPreference
+            android:key="performance_min_freq"
+            android:title="@string/cpu_min_freq_title" />
+        <ListPreference
+            android:key="performance_max_freq"
+            android:title="@string/cpu_max_freq_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="apply_settings"
+            android:title="@string/apply_settings"
+            android:summary="Apply current frequency and governor settings" />
+        <Preference
+            android:key="reset_settings"
+            android:title="@string/reset_settings"
+            android:summary="Reset all settings to default values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/kernel_info_category">
+        <Preference
+            android:title="@string/kernel_info_title"
+            android:summary="@string/kernel_info_summary"
+            android:selectable="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

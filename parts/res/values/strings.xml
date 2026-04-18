@@ -14,7 +14,17 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Xiaomi Settings -->
+
+    <string name="app_title">Xiaomi Settings</string>
+    <string name="tile_add">Add tile</string>
+    <string name="tile_added">Tile added</string>
+    <string name="tile_not_added">Tile not added</string>
+    <string name="tile_already_added">Tile already added</string>
+    <string name="tile_on">On</string>
+    <string name="tile_off">Off</string>
 
     <!-- Thermal profiles -->
     <string name="thermal_title">Thermal profiles</string>
@@ -37,16 +47,212 @@
     <string name="refresh_extreme">120Hz</string>
     <string name="refresh_land">60Hz on Landscape</string>    
 
-    <!-- Doze Strings -->
-    <string name="doze_brightness_low">Low brightness</string>
-    <string name="doze_brightness_high">High brightness</string>
-    <string name="doze_brightness_adaptive">Adaptive brightness</string>
-    <string name="doze_brightness_title">Doze brightness level</string>
-    <string name="doze_brightness_summary">Brightness level of doze pulse screen (% of max allowed brightness)</string>
-
     <!-- Clear Speaker -->
    <string name="clear_speaker_title">Clear speaker</string>
    <string name="clear_speaker_summary">Play a 30-second audio to clear the speaker</string>
    <string name="clear_speaker_description">Run this feature once or twice if you find that your speaker is lightly blocked by dust. Set media volume to maximum.\n\nIf the speaker is blocked heavily, run this feature 2-5 times while shaking your device with the speaker facing downwards.</string>
+
+    <!-- Zram Settings -->
+    <string name="zram_size_title">ZRAM size</string>
+    <string name="zram_size_summary">Configure ZRAM swap size</string>
+    <string name="zram_disabled">Disabled</string>
+    <string name="zram_size_dynamic">Dynamic (default)</string>
+    <string name="zram_size_2gb">2GB</string>
+    <string name="zram_size_4gb">4GB</string>
+    <string name="zram_size_8gb">8GB</string>
+    <string name="zram_summary">Choose which ZRAM settings to apply</string>
+    <string name="zram_change_applied">ZRAM setting saved (will apply after reboot)</string>
+    <string name="zram_reboot_recommended">For changes to take effect, please reboot your device</string>
+    <string name="zram_compression_title">Compression algorithm</string>
+    <string name="zram_compression_summary">Choose ZRAM compression algorithm</string>
+    <string name="swappiness_title">Swappiness</string>
+    <string name="swappiness_summary">Adjust how aggressively the kernel swaps memory pages (default: 60)</string>
+    <string name="swappiness_value">%1$d</string>
+    <string name="zram_change_failed">Failed to apply ZRAM settings</string>
+    <string name="advanced_settings">Advanced settings</string>
+
+    <!-- Core Control -->
+    <string name="core_control_title">Core Control</string>
+    <string name="core_control_summary">Manually enable or disable individual CPU cores</string>
+    <string name="core_control_description">Advanced CPU control. Turning off cores may save battery or thermal load, but may affect performance and stability.\n\nAt least two little cores must remain online at all times.</string>
+    <string name="core_0">Core 0</string>
+    <string name="core_1">Core 1</string>
+    <string name="core_2">Core 2</string>
+    <string name="core_3">Core 3</string>
+    <string name="core_4">Core 4</string>
+    <string name="core_5">Core 5</string>
+    <string name="core_6">Core 6 (Big)</string>
+    <string name="core_7">Core 7 (Big)</string>
+
+    <!-- Kamis Stuff -->
+    <string name="kamis_stuff_title">Kamis Stuff</string>
+    <string name="kamis_stuff_summary">Bricking Time!</string>
+
+    <!-- Useless Mode -->
+    <string name="useless_mode_title">Useless Mode</string>
+    <string name="useless_mode_summary">Toggle this for absolutely no reason</string>
+    <string name="useless_mode_enabled_summary">Useless mode is ON - Expect random buzzing and flickering!</string>
+    <string name="useless_mode_disabled_summary">Useless mode is OFF - Your device remains boringly normal</string>
+    <string name="useless_info_category">Information</string>
+    <string name="useless_info_title">About Useless Mode</string>
+    <string name="useless_info_summary">This toggle does absolutely nothing useful. It exists purely for entertainment purposes and may cause random vibrations, screen flickering, and existential confusion. No actual device functionality is affected.</string>
+    <string name="useless_mode_warning_title">⚠️ Useless Mode Warning</string>
+    <string name="useless_mode_status_title">🎉 Useless Mode Status</string>
+    <string name="useless_mode_accept">I Accept the Uselessness</string>
+    <string name="useless_mode_cancel">Cancel</string>
+    <string name="useless_mode_amazing">Amazing!</string>
+
+    <!-- Kernel Manager -->
+    <string name="kernel_manager_title">Kernel Manager</string>
+    <string name="kernel_manager_summary">Manage CPU frequencies and governor</string>
+    <string name="cpu_governor_title">CPU Governor</string>
+    <string name="cpu_governor_summary">Current: %s</string>
+    <string name="cpu_min_freq_title">Minimum Frequency</string>
+    <string name="cpu_max_freq_title">Maximum Frequency</string>
+    <string name="efficiency_cluster_title">Efficiency Cluster</string>
+    <string name="performance_cluster_title">Performance Cluster</string>
+    <string name="kernel_info_category">Information</string>
+    <string name="kernel_info_title">About Kernel Manager</string>
+    <string name="kernel_info_summary">Manage CPU governor and frequency scaling for all CPU clusters. Changes may affect performance and battery life.</string>
+    <string name="apply_settings">Apply Settings</string>
+    <string name="reset_settings">Reset to Default</string>
+    <string name="settings_applied">Settings applied successfully</string>
+    <string name="settings_reset">Settings reset to default</string>
+
+    <!-- GPU Manager -->
+    <string name="gpu_manager_title">GPU Manager</string>
+    <string name="gpu_manager_summary">Manage GPU frequencies and power settings</string>
+    <string name="gpu_governor_title">GPU Governor</string>
+    <string name="gpu_governor_summary">Current: %s</string>
+    <string name="gpu_freq_title">GPU Frequencies</string>
+    <string name="gpu_min_freq_title">Minimum Frequency</string>
+    <string name="gpu_max_freq_title">Maximum Frequency</string>
+    <string name="gpu_current_freq_title">Current Frequency</string>
+    <string name="gpu_power_title">Power Settings</string>
+    <string name="gpu_force_clk_on_title">Force Clock On</string>
+    <string name="gpu_force_clk_on_summary">Keep GPU clock always on</string>
+    <string name="gpu_force_bus_on_title">Force Bus On</string>
+    <string name="gpu_force_bus_on_summary">Keep GPU bus always on</string>
+    <string name="gpu_force_rail_on_title">Force Rail On</string>
+    <string name="gpu_force_rail_on_summary">Keep GPU power rail always on</string>
+    <string name="gpu_force_no_nap_title">Force No Nap</string>
+    <string name="gpu_force_no_nap_summary">Disable GPU napping between frames</string>
+    <string name="gpu_bus_split_title">Bus Split</string>
+    <string name="gpu_bus_split_summary">Enable GPU bus splitting</string>
+    <string name="gpu_thermal_title">Thermal Settings</string>
+    <string name="gpu_thermal_pwrlevel_title">Thermal Power Level</string>
+    <string name="gpu_thermal_pwrlevel_summary">Current thermal power level</string>
+    <string name="gpu_temp_title">GPU Temperature</string>
+    <string name="gpu_info_title">GPU Information</string>
+    <string name="gpu_model_title">GPU Model</string>
+    <string name="gpu_busy_percentage_title">GPU Load</string>
+    <string name="gpu_reset_count_title">Reset Count</string>
+    <string name="gpu_preempt_count_title">Preemption Count</string>
+    <string name="gpu_info_category">GPU Information</string>
+    <string name="gpu_settings_category">GPU Settings</string>
+    <string name="gpu_advanced_category">Advanced Settings</string>
+    <string name="gpu_info_summary">Manage GPU frequency scaling and power settings. Changes may affect performance and battery life.</string>
+
+    <!-- Dirac settings -->
+    <string name="dirac_enable">Enable dirac</string>
+    <string name="dirac_title">Dirac™ Sound</string>
+    <string name="dirac_summary">Optimize audio quality</string>
+    <string name="dirac_headset_title">Choose headphones type</string>
+    <string name="dirac_preset_title">Choose a preset</string>
+    <string name="dirac_hifi_enable_title">Enable Hi-fi</string>
+    <string name="dirac_hifi_title">Hi-Fi</string>
+    <string name="dirac_hifi_summary">Decrease noise and Distortion and increase audio quality</string>
+
+    <!-- Dirac settings: Headset types -->
+    <string name="dirac_headset_default">Default</string>
+    <string name="dirac_headset_earbuds">Mi Earbuds</string>
+    <string name="dirac_headset_in_ear_2013">Mi In-Ear (2013)</string>
+    <string name="dirac_headset_piston_1">Mi Piston-1</string>
+    <string name="dirac_headset_general">General</string>
+    <string name="dirac_headset_general_inear">General In-Ear</string>
+    <string name="dirac_headset_piston_basic">Basic Edition</string>
+    <string name="dirac_headset_piston_2">Mi Piston-2</string>
+    <string name="dirac_headset_piston_standard">Standard Edition</string>
+    <string name="dirac_headset_headphone">Mi Headphones</string>
+    <string name="dirac_headset_piston_youth">Youth Edition</string>
+    <string name="dirac_headset_piston_color">Color Edition</string>
+    <string name="dirac_headset_in_ear">Mi In-Ear</string>
+    <string name="dirac_headset_capsule">Mi Capsule</string>
+    <string name="dirac_headset_in_ear_pro">Mi In-Ear Pro</string>
+    <string name="dirac_headset_comfort">Mi Comfort</string>
+    <string name="dirac_headset_reduction_noise">Mi Noise Cancelling Type-C</string>
+    <string name="dirac_headset_cancelling">Mi Noise Cancelling 3.5mm</string>
+    <string name="dirac_headset_half_in_ear">Mi Half In-Ear</string>
+    <string name="dirac_headset_in_ear2">Mi In-Ear 2</string>
+    <string name="dirac_headset_earphone_basic">Mi Earphones Basic</string>
+    <string name="dirac_headset_earphone">Mi Earphones</string>
+    <string name="dirac_headset_ear_four">Mi Quadruple Driver Earphones</string>
+    <string name="dirac_headset_piston_typec">Mi In-Ear Headphones (Type-C)</string>
+    <string name="dirac_headset_bluetooth_collar">Mi Bluetooth Neckband</string>
+    <string name="dirac_headset_bluetooth_linefree">Mi Bluetooth Earphones</string>
+    <string name="dirac_headset_redmi_earphones">Redmi Earphones</string>
+    <string name="dirac_headset_dual_driver_in_ear">Mi Dual Driver In-ear Earphones</string>
+
+    <!-- Dirac settings: Equalizer presets -->
+    <string name="dirac_preset_default">Default</string>
+    <string name="dirac_preset_rock">Rock</string>
+    <string name="dirac_preset_jazz">Jazz</string>
+    <string name="dirac_preset_pop">Pop</string>
+    <string name="dirac_preset_classical">Classical</string>
+    <string name="dirac_preset_hiphop">Hip Hop</string>
+    <string name="dirac_preset_blues">Blues</string>
+    <string name="dirac_preset_electronic">Electronic</string>
+    <string name="dirac_preset_country">Country</string>
+    <string name="dirac_preset_dance">Dance</string>
+    <string name="dirac_preset_metal">Metal</string>
+    <string name="dirac_preset_bass_booster">Bass Booster</string>
+    <string name="dirac_preset_live">Live</string>
+    <string name="dirac_preset_balanced">Balanced</string>
+    <string name="dirac_preset_bass_reduction">Bass Reduction</string>
+    <string name="dirac_preset_treble_reduction">Treble Reduction</string>
+    <string name="dirac_preset_soft_bass">Soft Bass</string>
+    <string name="dirac_preset_soft_treble">Soft Treble</string>
+
+    <!-- Dirac settings: Sound Scenes -->
+    <string name="music_headset_scenario_select">Choose scene</string>
+    <string name="music_headset_scenario_intelligent">Smart</string>
+    <string name="music_headset_scenario_music">Music</string>
+    <string name="music_headset_scenario_video">Video</string>
+    <string name="music_headset_scenario_vocal">Voice</string>
+
+    <!-- Per-app resolution -->
+    <string name="resolution_title">Per-app resolution</string>
+    <string name="resolution_summary">Set custom resolution for specific applications</string>
+    <string name="resolution_default">Default</string>
+    <string name="resolution_480p">480p</string>
+    <string name="resolution_540p">540p</string>
+    <string name="resolution_720p">720p</string>
+
+    <!-- System-wide resolution -->
+    <string name="system_resolution_title">System resolution</string>
+    <string name="system_resolution_summary">Baseline applied system-wide: %1$s</string>
+    <string name="system_resolution_summary_setting">Baseline applied system-wide</string>
+    <string name="system_resolution_note">Per-app rules override the baseline while those apps are in the foreground</string>
+
+    <!-- High Touch Polling -->
+    <string name="htsr_title">Touch Responsiveness</string>
+    <string name="htsr_enable_title">Increase Touch Responsiveness</string>
+    <string name="htsr_enable_summary">Increases touch polling rate to decrease latency</string>   
+
+   <!-- Saturation -->
+    <string name="saturation_title">Display Saturation</string>
+    <string name="saturation_summary">Control the saturation level of the display</string>
+    <string name="saturation_footer_summary">Changing the color mode in display settings will override the saturation level, requiring it to be reapplied.</string>
+
+    <!-- Image preview -->
+    <string name="image_preview_content_description">Preview</string>
+    <string name="image_preview_next_page_content_description">Next</string>
+    <string name="image_preview_previous_page_content_description">Previous</string>
+
+    <!-- Custom seekbar -->
+    <string name="custom_seekbar_value">Value: <xliff:g id="v">%s</xliff:g></string>
+    <string name="custom_seekbar_default_value">by default</string>
+    <string name="custom_seekbar_default_value_to_set">Default value: <xliff:g id="v">%s</xliff:g>\nLong tap to set</string>
+    <string name="custom_seekbar_default_value_is_set">Default value is set</string>
 
 </resources>

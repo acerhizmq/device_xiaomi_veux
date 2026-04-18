@@ -1,2 +1,33 @@
 allow system_app sysfs_torch:file rw_file_perms;
 allow system_app sysfs_torch:dir search;
+
+# Parts
+allow system_app sysfs_thermal:file write;
+
+# Core Control
+allow system_app vendor_sysfs_corecontrol:dir search;
+allow system_app vendor_sysfs_corecontrol:file { getattr open read write };
+
+# DC Dimming and HBM
+allow system_app vendor_sysfs_graphics:dir search;
+allow system_app vendor_sysfs_graphics:file { getattr open write };
+
+# Fastcharge
+allow system_app vendor_sysfs_fastcharge:file { getattr open read write };
+
+# Allow system_app to set ZRAM property
+set_prop(system_app, vendor_zram_prop)
+get_prop(system_app, vendor_zram_prop)
+set_prop(system_app, vendor_default_prop)
+get_prop(system_app, vendor_default_prop)
+
+# Kernel Manager
+allow system_app sysfs_devices_system_cpu:file { open read write };
+allow system_app sysfs_devices_system_cpu:dir search;
+
+# GPU Manager
+allow system_app sysfs_kgsl:file { getattr open read write };
+allow system_app sysfs_kgsl:dir search;
+allow system_app vendor_sysfs_kgsl_gpuclk:file { getattr open read write };
+allow system_app vendor_sysfs_kgsl_gpuclk:dir search;
+allow system_app sysfs_kgsl:lnk_file read;

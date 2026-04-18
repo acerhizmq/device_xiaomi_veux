@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/useless_mode_title">
+
+    <SwitchPreferenceCompat
+        android:key="useless_mode"
+        android:title="@string/useless_mode_title"
+        android:summary="@string/useless_mode_summary"
+        android:defaultValue="false" />
+
+    <PreferenceCategory android:title="@string/useless_info_category">
+        <Preference
+            android:title="@string/useless_info_title"
+            android:summary="@string/useless_info_summary"
+            android:selectable="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

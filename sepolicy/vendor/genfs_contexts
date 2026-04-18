@@ -44,3 +44,6 @@ genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/wakeup u:object_r:sysfs_wak
 genfscon sysfs /class/drm/card0-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
 genfscon sysfs /class/drm/sde-conn-1-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
 genfscon sysfs /class/drm/sde-conn-0-DSI-1/bl_scale_sv u:object_r:sysfs_livedisplay_tuneable:s0
+
+# Core Control
+genfscon sysfs /devices/system/cpu/cpu[0-7]/online   u:object_r:vendor_sysfs_corecontrol:s0

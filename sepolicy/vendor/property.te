@@ -9,3 +9,6 @@ vendor_internal_prop(vendor_rild_prop);
 
 # 464XLAT
 vendor_internal_prop(vendor_xlat_prop);
+
+# ZRAM
+vendor_internal_prop(vendor_zram_prop);

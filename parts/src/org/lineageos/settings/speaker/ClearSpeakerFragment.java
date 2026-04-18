@@ -29,7 +29,7 @@ import android.util.Log;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
-import androidx.preference.SwitchPreference;
+import androidx.preference.TwoStatePreference;
 
 import org.lineageos.settings.R;
 
@@ -45,13 +45,13 @@ public class ClearSpeakerFragment extends PreferenceFragment implements
     private AudioManager mAudioManager;
     private Handler mHandler;
     private MediaPlayer mMediaPlayer;
-    private SwitchPreference mClearSpeakerPref;
+    private TwoStatePreference mClearSpeakerPref;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.clear_speaker_settings);
 
-        mClearSpeakerPref = (SwitchPreference) findPreference(PREF_CLEAR_SPEAKER);
+        mClearSpeakerPref = (TwoStatePreference) findPreference(PREF_CLEAR_SPEAKER);
         mClearSpeakerPref.setOnPreferenceChangeListener(this);
 
         mHandler = new Handler();
