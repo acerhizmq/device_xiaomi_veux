@@ -113,11 +113,14 @@ ro.vendor.bluetooth.wipower=false
 # Camera
 camera.disable_zsl_mode=true
 camera.force_snaps_on_shutter_denoise=false
-vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.lineageos.aperture,org.lineageos.aperture.dev,com.shamim.cam
-persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,org.lineageos.aperture,org.lineageos.aperture.dev,com.shamim.cam
+vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,com.xiaomi.camera
+persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,com.xiaomi.camera
 persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam,com.shamim.cam
 persist.vendor.camera.HAL3.enabled=1
 vendor.camera.lowpower.record.enable=0
+
+# Face Unlock
+ro.face.sense_service.camera_id=1
 
 # Dalvik
 dalvik.vm.dex2oat64.enabled=true

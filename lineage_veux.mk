@@ -25,7 +25,7 @@ TARGET_SUPPORTED_REFRESH_RATES := 60,120
 SURFACE_FLINGER_BOOST := true
 HBM_SUPPORTED := true
 HBM_NODE := /sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv
-PRODUCT_NO_CAMERA := false
+PRODUCT_NO_CAMERA := true
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.lunaris.maintainer=acerhizm \

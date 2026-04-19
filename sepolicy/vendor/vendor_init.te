@@ -18,7 +18,7 @@ allow vendor_init sysfs_torch:file { write open getattr };
 get_prop(vendor_init, acer_flashlight_prop)
 
 # 464XLAT: Allow vendor_init to set the doxlat property
-allow vendor_init vendor_xlat_prop:property_service set;
+set_prop(vendor_init, vendor_xlat_prop)
 
 # ZRAM
 set_prop(vendor_init, vendor_zram_prop);
