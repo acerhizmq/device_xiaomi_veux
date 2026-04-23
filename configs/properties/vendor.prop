@@ -197,6 +197,7 @@ ro.incremental.enable=true
 
 # Media
 debug.stagefright.c2inputsurface=-1
+ro.media.xml_variant.profiles=_blair
 vendor.media.target_variant=_blair
 vendor.netflix.bsp_rev=Q4350-32962-1
 
