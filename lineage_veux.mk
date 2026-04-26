@@ -24,7 +24,7 @@ TARGET_OPTIMIZED_DEXOPT := true
 TARGET_SUPPORTED_REFRESH_RATES := 60,120
 SURFACE_FLINGER_BOOST := true
 HBM_SUPPORTED := true
-HBM_NODE := /sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv
+HBM_NODE := /sys/devices/platform/soc/soc:qcom,dsi-display-primary/hbm_enabled
 PRODUCT_NO_CAMERA := true
 
 PRODUCT_PRODUCT_PROPERTIES += \
