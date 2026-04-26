@@ -29,8 +29,6 @@ persist.vendor.time.                      u:object_r:vendor_time_prop:s0
 # SSR
 persist.vendor.ssr.enable_ramdumps  u:object_r:vendor_ssr_prop:s0
 
-# 464XLAT
-persist.vendor.net.doxlat           u:object_r:vendor_xlat_prop:s0
 
 # ZRAM
 persist.vendor.zram.size            u:object_r:vendor_zram_prop:s0
