@@ -49,7 +49,7 @@ genfscon sysfs /class/drm/sde-conn-0-DSI-1/bl_scale_sv u:object_r:sysfs_livedisp
 genfscon sysfs /devices/system/cpu/cpu[0-7]/online   u:object_r:vendor_sysfs_corecontrol:s0
 
 # Display dim layer Exposure
-genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure u:object_r:vendor_sysfs_graphics:s0
+genfscon sysfs /devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure u:object_r:vendor_sysfs_graphics:s0
 
 # Display HBM
-genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/hbm_enabled u:object_r:vendor_sysfs_graphics:s0
+genfscon sysfs /devices/platform/soc/5e00000.qcom,mdss_mdp/drm/card0/card0-DSI-1/hbm u:object_r:vendor_sysfs_graphics:s0
