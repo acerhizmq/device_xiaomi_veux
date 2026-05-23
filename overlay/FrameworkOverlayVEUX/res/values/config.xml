@@ -509,11 +509,11 @@
     <bool name="skip_restoring_network_selection">true</bool>
 
     <!-- Pocket Lock -->
-    <bool name="config_pocketModeSupported">false</bool>
+    <bool name="config_pocketModeSupported">true</bool>
 
     <!-- Whether WM DisplayContent supports high performance transitions
          (lower-end devices may want to disable) -->
-    <bool name="config_deviceSupportsHighPerfTransitions">false</bool>
+    <bool name="config_deviceSupportsHighPerfTransitions">true</bool>
 
     <!-- Whether High Brightness Mode (HBM) / Sunlight Enhancement is enabled -->
     <bool name="config_hbmEnabled">true</bool>

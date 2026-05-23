@@ -118,6 +118,13 @@ persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,com.xia
 persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam,com.shamim.cam
 persist.vendor.camera.HAL3.enabled=1
 vendor.camera.lowpower.record.enable=0
+# Lunaris veux 108MP HM2 third-party video-chat lag mitigation (WhatsApp etc).
+# Enables the surgical libcameraservice patch in
+# frameworks/av/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp
+# that remaps the JFIF dataspace to UNKNOWN ONLY for small (<=1280x720) non-priv
+# YUV streams. Untouched: MIUI Camera (priviledged), JPEG snapshots (BLOB+JFIF),
+# >720p third-party YUV. Prevents CamX from picking heavy ZSLPreviewRaw pipeline.
+persist.vendor.camera.strip_thirdparty_jfif=true
 
 # Face Unlock
 ro.face.sense_service.camera_id=1
@@ -131,7 +138,7 @@ ro.surface_flinger.blur_disabled_by_default=true
 ro.surface_flinger.enable_frame_rate_override=false
 ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
 ro.surface_flinger.game_default_frame_rate_override=120
-ro.surface_flinger.has_wide_color_display=false
+ro.surface_flinger.has_wide_color_display=true
 ro.surface_flinger.max_frame_buffer_acquired_buffers=3
 ro.surface_flinger.max_virtual_display_dimension=4096
 ro.surface_flinger.protected_contents=true
