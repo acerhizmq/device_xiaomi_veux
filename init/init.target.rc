@@ -35,6 +35,12 @@ on early-init
     start vendor.audioadsprpcd_audiopd
 
 on init
+    # Lunaris veux 108MP HM2 third-party video-chat lag mitigation (WhatsApp etc).
+    # Force-enable the libcameraservice JFIF dataspace remap for non-priv small YUV
+    # streams. Belt-and-braces with vendor.prop in case the property gets stripped
+    # or /data/property has a stale value from a previous boot.
+    setprop persist.vendor.camera.strip_thirdparty_jfif true
+
     # Scheduler uclamp
     mkdir /dev/cpuctl/foreground
     mkdir /dev/cpuctl/background
