@@ -40,4 +40,4 @@ genfscon sysfs /devices/platform/soc/soc:qcom_wt_chg/wakeup u:object_r:sysfs_wak
 genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure u:object_r:vendor_sysfs_graphics:s0
 
 # Display HBM
-genfscon sysfs /sys/devices/platform/soc/soc:qcom,dsi-display-primary/hbm_enabled u:object_r:vendor_sysfs_graphics:s0
+genfscon sysfs /sys/devices/platform/soc/5e00000.qcom,mdss_mdp/drm/card0/card0-DSI-1/hbm u:object_r:vendor_sysfs_graphics:s0
