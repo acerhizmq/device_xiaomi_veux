@@ -1,4 +1,5 @@
 type devicesettings_app;
+typeattribute devicesettings_app coredomain;
 app_domain(devicesettings_app)
 
 # Access standard system services
