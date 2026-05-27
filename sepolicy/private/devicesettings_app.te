@@ -1,6 +1,5 @@
 not_recovery(`
-type devicesettings_app;
-typeattribute devicesettings_app coredomain;
+type devicesettings_app, domain, coredomain;
 app_domain(devicesettings_app)
 
 # Access standard system services
