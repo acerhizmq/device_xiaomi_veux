@@ -60,3 +60,6 @@
 
 # Touch Sampling
 /sys/devices/virtual/touch/touch_dev/bump_sample_rate                                               u:object_r:sysfs_htsr:s0
+
+# Backlight
+/sys/class/backlight/panel0-backlight/brightness                                                    u:object_r:sysfs_leds_devicesettings:s0
