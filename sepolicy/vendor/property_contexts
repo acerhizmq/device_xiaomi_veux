@@ -1,4 +1,5 @@
 # Camera
+persist.vendor.camera.clientname    u:object_r:vendor_persist_camera_prop:s0
 vendor.camera.config.level          u:object_r:vendor_camera_prop:s0
 vendor.camera.sensor.               u:object_r:vendor_camera_sensor_prop:s0
 vendor.camera.*                     u:object_r:vendor_camera_prop:s0

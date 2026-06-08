@@ -327,6 +327,7 @@ vendor/lib64/libarcsoft_portrait_lighting_c.so
 vendor/lib64/libarcsoft_super_night_raw.so
 
 # Camera camerax
+system_ext/framework/camerax-vendor-extensions.jar
 vendor/lib/libcamxexternalformatutils.so
 vendor/lib/libcamxfacialfeatures.so
 vendor/lib/libcamxfdalgo.so

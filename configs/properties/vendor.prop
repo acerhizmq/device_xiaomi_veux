@@ -111,7 +111,9 @@ ro.bluetooth.a2dp_offload.supported=true
 ro.vendor.bluetooth.wipower=false
 
 # Camera
-camera.disable_zsl_mode=true
+# Do not set camera.disable_zsl_mode=true: MIUI Camera video uses CamX
+# RealTimeFeatureZSLPreviewRaw_* + EIS/MCTF; forcing API1 ZSL off while the HAL
+# still runs ZSL pipelines causes preview/video glitches and warped output.
 camera.force_snaps_on_shutter_denoise=false
 vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,com.xiaomi.camera
 persist.camera.aux.packagelist=org.codeaurora.snapcam,com.android.camera,com.xiaomi.camera
@@ -119,11 +121,9 @@ persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam,com
 persist.vendor.camera.HAL3.enabled=1
 vendor.camera.lowpower.record.enable=0
 # Lunaris veux 108MP HM2 third-party video-chat lag mitigation (WhatsApp etc).
-# Enables the surgical libcameraservice patch in
-# frameworks/av/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp
-# that remaps the JFIF dataspace to UNKNOWN ONLY for small (<=1280x720) non-priv
-# YUV streams. Untouched: MIUI Camera (priviledged), JPEG snapshots (BLOB+JFIF),
-# >720p third-party YUV. Prevents CamX from picking heavy ZSLPreviewRaw pipeline.
+# Enables libcameraservice JFIF dataspace remap for small non-priv YUV streams and
+# thirdPartyYUVSnapshot session param when registered by stock camera HAL blobs.
+# ro.build.product=veux (lineage_veux.mk) prevents CHI "Pure AOSP" XML fallback.
 persist.vendor.camera.strip_thirdparty_jfif=true
 
 # Face Unlock
@@ -186,7 +186,6 @@ ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
 # Graphics
 debug.graphics.game_default_frame_rate.disabled=1
-debug.sf.auto_latch_unsignaled=0
 debug.sf.enable_advanced_sf_phase_offset=1
 debug.sf.enable_gl_backpressure=false
 debug.sf.high_fps_early_gl_phase_offset_ns=-4000000
@@ -212,6 +211,7 @@ ro.incremental.enable=true
 debug.stagefright.c2inputsurface=-1
 vendor.media.omx=0
 vendor.media.target_variant=_blair
+ro.media.xml_variant.profiles=_blair
 vendor.netflix.bsp_rev=Q4350-32962-1
 
 # Perf
@@ -245,9 +245,11 @@ persist.vendor.ssr.enable_ramdumps=0
 # Sensors
 persist.vendor.sensors.enable.bypass_worker=true
 persist.vendor.sensors.enable.mag_filter=true
-persist.vendor.sensors.enable.rt_task=false
+# High-rate gyro for CamX EIS/MCTF direct report during video recording.
+persist.vendor.sensors.enable.rt_task=true
 persist.vendor.sensors.hal_trigger_ssr=false
-persist.vendor.sensors.support_direct_channel=false
+# Required for CamX MCTF/EIS gyro fusion (logcat "Gyro disabled" / 0 tracking points).
+persist.vendor.sensors.support_direct_channel=true
 persist.vendor.sensors.sync_request=true
 
 # SoC

@@ -31,7 +31,8 @@ PRODUCT_PRODUCT_PROPERTIES += \
     ro.lunaris.maintainer=acerhizm \
     ro.product.mod_device=veux_global \
     ro.miui.ui.version.name=V140 \
-    ro.miui.ui.version.code=13
+    ro.miui.ui.version.code=13 \
+    ro.build.product=veux
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400

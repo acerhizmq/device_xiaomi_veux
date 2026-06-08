@@ -16,6 +16,10 @@ get_prop(hal_camera_default, vendor_video_prop)
 allow hal_camera_default hal_graphics_mapper_hwservice:hwservice_manager find;
 allow hal_camera_default fwk_sensor_hwservice:hwservice_manager find;
 
+# CamX MCTF/EIS needs the sensors HAL (gyro at video rate). Without this, logs show
+# "Gyro disabled" and warped MIUI Camera video (parabolic/fisheye-like output).
+hal_client_domain(hal_camera_default, hal_sensors)
+
 # Mute harmless default_prop log spams to avoid avc denials
 dontaudit hal_camera_default default_prop:file read;
 

@@ -47,7 +47,6 @@ AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 AUDIO_FEATURE_ENABLED_SVA_MULTI_STAGE := true
 BOARD_SUPPORTS_OPENSOURCE_STHAL := true
 BOARD_SUPPORTS_SOUND_TRIGGER := true
-TARGET_PROVIDES_AUDIO_EXTNS := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := veux
@@ -86,7 +85,6 @@ BOARD_KERNEL_CMDLINE := \
     androidboot.usbcontroller=4e00000.dwc3 \
     swiotlb=0 \
     loop.max_part=7 \
-    cgroup.memory=nokmem,nosocket \
     iptable_raw.raw_before_defrag=1 \
     ip6table_raw.raw_before_defrag=1 \
     firmware_class.path=/vendor/firmware
