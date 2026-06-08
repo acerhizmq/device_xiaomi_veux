@@ -25,9 +25,9 @@ fi
 #    git clone https://gitlab.com/isaiahscape/vendor_xiaomi_camera.git vendor/xiaomi/camera
 #fi
 
-#if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
-#    git clone https://github.com/Project-Astraverse/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
-#fi
+if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
+    git clone https://github.com/Project-Astraverse/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
+fi
 
 # Dolby
 if [ ! -d "hardware/dolby" ]; then
