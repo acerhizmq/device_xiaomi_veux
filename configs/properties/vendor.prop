@@ -121,10 +121,17 @@ persist.vendor.camera.privapp.list=com.android.camera,org.codeaurora.snapcam,com
 persist.vendor.camera.HAL3.enabled=1
 vendor.camera.lowpower.record.enable=0
 # Lunaris veux 108MP HM2 third-party video-chat lag mitigation (WhatsApp etc).
-# Enables libcameraservice JFIF dataspace remap for small non-priv YUV streams and
-# thirdPartyYUVSnapshot session param when registered by stock camera HAL blobs.
+# persist.vendor.cam.strip3pjfif (30 chars) enables libcameraservice JFIF remap and
+# thirdPartyYUVSnapshot session params via property_get (names >=31 chars are unreadable).
 # ro.build.product=veux (lineage_veux.mk) prevents CHI "Pure AOSP" XML fallback.
-persist.vendor.camera.strip_thirdparty_jfif=true
+persist.vendor.cam.strip3pjfif=true
+# Stock HAL vendor tag IDs (dumpsys media.camera on veux/peux HM2):
+#   com.xiaomi.sessionparams.clientName = 0x808d0000
+#   com.xiaomi.sessionparams.thirdPartyYUVSnapshot = 0x808d0001
+# Used by XiaomiVendorTagOverlay when registering sessionParams tags in cameraserver.
+# Names must be <=30 chars (property_get / PROP_NAME_MAX).
+persist.vendor.cam.cname_tag=0x808d0000
+persist.vendor.cam.3pyuv_tag=0x808d0001
 
 # Face Unlock
 ro.face.sense_service.camera_id=1

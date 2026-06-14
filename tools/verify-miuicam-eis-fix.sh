@@ -20,9 +20,13 @@ grep -q 'persist.vendor.sensors.support_direct_channel true' \
 grep -qE '^camera\.disable_zsl_mode=true' "${VEUX}/configs/properties/vendor.prop" \
     && die "camera.disable_zsl_mode still set"
 
-# 3) MCTF enabled in shipping camx blob
+# 3) MCTF enabled in shipping camx config (Lunaris configs/camera overlay)
 grep -q '^enableMCTF=TRUE' \
-    "${VENDOR}/vendor/etc/camera/camxoverridesettings.txt" || die "enableMCTF not TRUE in blob"
+    "${VEUX}/configs/camera/camxoverridesettings.txt" || die "enableMCTF not TRUE in camxoverridesettings"
+grep -q '^logInfoMask=0x0' \
+    "${VEUX}/configs/camera/camxoverridesettings.txt" || die "logInfoMask not 0 in camxoverridesettings"
+grep -q '^overrideLogLevels=0x0' \
+    "${VEUX}/configs/camera/camxoverridesettings.txt" || die "overrideLogLevels not 0 in camxoverridesettings"
 
 # 4) SSC first in hals.conf (direct channel owner)
 first_line="$(grep -v '^#' "${VENDOR}/vendor/etc/sensors/hals.conf" | grep -v '^[[:space:]]*$' | head -1)"
@@ -39,7 +43,7 @@ grep -q '"data": "1"' "${VENDOR}/vendor/etc/sensors/config/sns_direct_channel.js
 # 7) device.mk installs stock blobs
 grep -q 'vendor/etc/sensors/hals.conf:\$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf' \
     "${VEUX}/device.mk" || die "device.mk missing hals.conf copy"
-grep -q 'camxoverridesettings.txt:\$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt' \
+grep -q 'configs/camera/camxoverridesettings.txt:\$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt' \
     "${VEUX}/device.mk" || die "device.mk missing camx copy"
 
 if [[ "${FAIL}" -eq 0 ]]; then

@@ -1,5 +1,9 @@
-# Camera
-persist.vendor.camera.clientname    u:object_r:vendor_persist_camera_prop:s0
+# Camera — pkgname is 29 chars (property_get limit 31); clientname was 32 and unreadable by CHI
+persist.vendor.camera.pkgname         u:object_r:vendor_persist_camera_prop:s0
+persist.vendor.cam.strip3pjfif        u:object_r:vendor_persist_camera_prop:s0
+# cameraserver overlay tag-ID hints (libcameraservice; names <=30 for property_get)
+persist.vendor.cam.cname_tag          u:object_r:vendor_persist_camera_prop:s0
+persist.vendor.cam.3pyuv_tag          u:object_r:vendor_persist_camera_prop:s0
 vendor.camera.config.level          u:object_r:vendor_camera_prop:s0
 vendor.camera.sensor.               u:object_r:vendor_camera_sensor_prop:s0
 vendor.camera.*                     u:object_r:vendor_camera_prop:s0

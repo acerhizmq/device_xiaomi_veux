@@ -81,12 +81,13 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.4-service_64
 
-# Stock HyperOS camera/sensor config (do not overlay device/configs copies).
+# Lunaris camxoverridesettings: log masks off; MCTF/EIS/multi-cam sync unchanged (configs/camera/).
 PRODUCT_COPY_FILES += \
-    vendor/xiaomi/veux/proprietary/vendor/etc/camera/camxoverridesettings.txt:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt \
+    $(LOCAL_PATH)/configs/camera/camxoverridesettings.txt:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt \
     vendor/xiaomi/veux/proprietary/vendor/etc/sensors/hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/hals.conf
 
 $(call soong_config_set_bool,camera,override_format_from_reserved,true)
+$(call soong_config_set,libcameraservice,ext_lib,libcameraservice_extension.veux)
 
 # DebugFS
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := true

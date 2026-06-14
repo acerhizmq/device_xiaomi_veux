@@ -1,0 +1,35 @@
+WhatsApp log capture — telefona kurulum (root shell)
+====================================================
+
+/sdcard uzerinde ./script.sh CALISMAZ (noexec).
+Script /data/local/tmp/ altina yazilir, sh ile calistirilir.
+
+--- YONTEM A: PC'den push (en kolay) ---
+
+  cd lunaris/device/xiaomi/veux/tools
+  bash LOG-CAPTURE-WHATSAPP-PUSH.sh
+
+--- YONTEM B: Root shell'e yapistir (PC yoksa) ---
+
+  su
+  cat > /data/local/tmp/wp-cap.sh << 'ENDOFFILE'
+  (LOG-CAPTURE-WHATSAPP-PHONE.sh dosyasinin TAMAMINI buraya yapistir)
+  ENDOFFILE
+  chmod 644 /data/local/tmp/wp-cap.sh
+
+--- TEST ---
+
+  1) WhatsApp goruntulu arama
+  2) On -> ARKA kamera gec
+  3) Hemen:
+       sh /data/local/tmp/wp-cap.sh
+
+  Veya once logger'i baslat, sonra test yap:
+       sh /data/local/tmp/wp-cap.sh watch
+
+--- GONDER ---
+
+  Dosya Yoneticisi -> Indirilenler (Download)
+  lunaris-whatsapp-logs-YYYYMMDD-HHMMSS klasorunu ZIP yap, gonder.
+
+  Icinde analysis/summary.txt otomatik ozet uretir.

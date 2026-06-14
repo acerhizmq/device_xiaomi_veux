@@ -36,7 +36,7 @@ on early-init
 
 on init
     # Lunaris veux 108MP HM2 third-party video-chat mitigation (WhatsApp etc).
-    setprop persist.vendor.camera.strip_thirdparty_jfif true
+    setprop persist.vendor.cam.strip3pjfif true
 
     # CamX MCTF/EIS gyro direct report (MIUI Camera video black tiles / Gyro disabled).
     setprop persist.vendor.sensors.support_direct_channel true

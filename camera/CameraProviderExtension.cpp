@@ -1,56 +1,60 @@
-#include <fstream>
-#include <string>
-#include <android/log.h>
-#include <unistd.h>
-#include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
-#include <sys/types.h>
+#include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <android/log.h>
+#include <cutils/properties.h>
 
 #define LOG_TAG "CameraProviderExtension"
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static const std::string kTorchLedPath = "/sys/class/leds/led:torch_0";
-static const std::string kTorchLed1Path = "/sys/class/leds/led:torch_1";
+static const char* kTorchStrengthPaths[] = {
+    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength",
+    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@1/torch_strength",
+    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@3/torch_strength",
+};
 
-static bool nodeExists(const std::string& path) {
-    return access(path.c_str(), F_OK) == 0;
-}
-
-template <typename T>
-static void set(const std::string& path, const T& value) {
-    std::ofstream file(path);
-    if (file.is_open()) {
-        file << value;
-        ALOGE("Successfully wrote %s to %s", std::to_string(value).c_str(), path.c_str());
-    } else {
-        ALOGE("Failed to open %s for writing", path.c_str());
+static void writeTorchStrengthPath(const char* path, int32_t torchStrength, bool* found) {
+    int fd = open(path, O_WRONLY);
+    if (fd < 0) {
+        ALOGE("setTorchStrengthSysfs: Failed to open %s (errno: %d)", path, errno);
+        return;
     }
-}
 
-template <typename T>
-static T get(const std::string& path, const T& def) {
-    std::ifstream file(path);
-    T result;
-    if (file.is_open()) {
-        file >> result;
-        if (file.fail()) {
-            ALOGE("Failed to read from %s", path.c_str());
-            return def;
+    char buf[16];
+    int len = snprintf(buf, sizeof(buf), "%d", torchStrength);
+    if (write(fd, buf, len) > 0) {
+        ALOGE("setTorchStrengthSysfs: Successfully wrote %d to %s", torchStrength, path);
+        if (found != nullptr) {
+            *found = true;
         }
-        return result;
+    } else {
+        ALOGE("setTorchStrengthSysfs: Failed to write %d to %s (errno: %d)", torchStrength, path,
+                errno);
     }
-    ALOGE("Failed to open %s for reading", path.c_str());
-    return def;
+    close(fd);
+}
+
+static void setTorchStrengthSysfs(int32_t torchStrength) {
+    bool found = false;
+    for (const char* path : kTorchStrengthPaths) {
+        if (access(path, F_OK) == 0) {
+            writeTorchStrengthPath(path, torchStrength, &found);
+        }
+    }
+
+    if (!found) {
+        ALOGE("setTorchStrengthSysfs: Could not write any veux torch_strength node!");
+    }
 }
 
 bool supportsTorchStrengthControlExt() {
-    ALOGE("supportsTorchStrengthControlExt called -> returning true (force)");
     return true;
 }
 
 bool supportsSetTorchModeExt() {
-    ALOGE("supportsSetTorchModeExt called -> returning true (force)");
     return true;
 }
 
@@ -63,71 +67,17 @@ int32_t getTorchMaxStrengthLevelExt() {
 }
 
 int32_t getTorchStrengthLevelExt() {
-    auto node = kTorchLedPath + "/brightness";
-    int32_t strength = get(node, 0);
-    ALOGE("getTorchStrengthLevelExt called: %d", strength);
-    return strength;
-}
-
-#include <glob.h>
-
-// New helper function for setting torch strength via sysfs node
-static void setTorchStrengthSysfs(int32_t torchStrength) {
-    ALOGE("setTorchStrengthSysfs: Setting torch strength to %d", torchStrength);
-    
-    glob_t glob_result;
-    // Search pattern for the torch_strength node
-    const char* pattern = "/sys/devices/platform/soc/*/*camera-flash*/torch_strength";
-    
-    int return_value = glob(pattern, GLOB_TILDE, NULL, &glob_result);
-    bool found = false;
-
-    if (return_value == 0) {
-        for (size_t i = 0; i < glob_result.gl_pathc; ++i) {
-            char* path = glob_result.gl_pathv[i];
-            // Skip @0, @2, @3 if they aren't the main one, but usually multiple flashes exist.
-            // For now, write to ALL found flash nodes to ensure the active one is hit.
-            int fd = open(path, O_WRONLY);
-            if (fd >= 0) {
-                char buf[16];
-                int len = snprintf(buf, sizeof(buf), "%d", torchStrength);
-                if (write(fd, buf, len) > 0) {
-                    ALOGE("setTorchStrengthSysfs: Successfully wrote %d to %s", torchStrength, path);
-                    found = true;
-                }
-                close(fd);
-            } else {
-                ALOGE("setTorchStrengthSysfs: Failed to open %s (errno: %d)", path, errno);
-            }
-        }
-    } else {
-        ALOGE("setTorchStrengthSysfs: glob() failed or no nodes found (pattern: %s, return: %d)", pattern, return_value);
+    char value[16] = {};
+    int fd = open(kTorchStrengthPaths[0], O_RDONLY);
+    if (fd < 0) {
+        return 0;
     }
-    
-    globfree(&glob_result);
-
-    if (!found) {
-        // Fallback for flatter hierarchies
-        const char* pattern2 = "/sys/devices/platform/soc/*camera-flash*/torch_strength";
-        if (glob(pattern2, GLOB_TILDE, NULL, &glob_result) == 0) {
-             for (size_t i = 0; i < glob_result.gl_pathc; ++i) {
-                int fd = open(glob_result.gl_pathv[i], O_WRONLY);
-                if (fd >= 0) {
-                    char buf[16];
-                    int len = snprintf(buf, sizeof(buf), "%d", torchStrength);
-                    write(fd, buf, len);
-                    close(fd);
-                    found = true;
-                    ALOGE("setTorchStrengthSysfs: Found via fallback: %s", glob_result.gl_pathv[i]);
-                }
-            }
-            globfree(&glob_result);
-        }
+    ssize_t n = read(fd, value, sizeof(value) - 1);
+    close(fd);
+    if (n <= 0) {
+        return 0;
     }
-
-    if (!found) {
-        ALOGE("setTorchStrengthSysfs: Could not find any writable torch_strength node!");
-    }
+    return static_cast<int32_t>(strtol(value, nullptr, 10));
 }
 
 void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
@@ -138,14 +88,33 @@ void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
     if (torchStrength > 127) torchStrength = 127;
     if (torchStrength < 0) torchStrength = 0;
 
-    ALOGE("setTorchStrengthLevelExt called: strength=%d, enabled=%d", torchStrength, enabled);
-    
-    // Write to kernel sysfs bridge - cam_flash_i2c_apply_setting will
-    // intercept the next torch open and apply this value to LM36011 reg 0x04
     setTorchStrengthSysfs(torchStrength);
 }
 
 void setTorchModeExt(bool enabled) {
     int32_t strength = getTorchDefaultStrengthLevelExt();
     setTorchStrengthLevelExt(enabled ? strength : 0, enabled);
+}
+
+int32_t getCameraCaptureFlashStrengthLevelExt() {
+    return getTorchMaxStrengthLevelExt();
+}
+
+void applyCameraCaptureFlashStrengthToSysfs() {
+    setTorchStrengthLevelExt(getCameraCaptureFlashStrengthLevelExt(), true);
+}
+
+void restoreTorchStrengthSysfsFromPersist() {
+    char value[PROPERTY_VALUE_MAX];
+    if (property_get("persist.flashlight.strength", value, "") <= 0) {
+        return;
+    }
+
+    char* end = nullptr;
+    long parsed = strtol(value, &end, 10);
+    if (end == value || parsed < 0 || parsed > 127) {
+        return;
+    }
+
+    setTorchStrengthLevelExt(static_cast<int32_t>(parsed), parsed > 0);
 }

@@ -3,7 +3,7 @@ if [ ! -d "vendor/xiaomi/veux" ]; then
 fi
 
 if [ ! -d "kernel/xiaomi/veux" ]; then
-    git clone https://github.com/Starrykernel/kernel_xiaomi_veux.git -b 16-Q2-KSU kernel/xiaomi/veux --depth=1
+    git clone https://github.com/Project-Astraverse/kernel_xiaomi_veux.git -b 16 kernel/xiaomi/veux --depth=1
 fi
 
 if [ ! -d "hardware/xiaomi" ]; then
