@@ -14,6 +14,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -36,9 +37,17 @@ public class AutoHBMService extends Service {
 
     // SharedPreferences corrupt olsa bile uygulanacak güvenli varsayılanlar.
     private static final float DEFAULT_LUX_THRESHOLD = 20000f;
-    private static final long DEFAULT_DISABLE_TIME_SEC = 1L;
+    private static final long DEFAULT_ENABLE_TIME_SEC = 2L;
+    private static final long DEFAULT_DISABLE_TIME_SEC = 5L;
     private static final int DEFAULT_BRIGHTNESS = 255;
-    private static final String HBM_BACKLIGHT_VALUE = "2047";
+    private static final int BACKLIGHT_MAX = 2047;
+
+    // Histerezis: kapatma eşiği açma eşiğinin bu oranı kadar düşük olmalı.
+    private static final float HBM_OFF_THRESHOLD_RATIO = 0.65f;
+    private static final int LUX_AVG_SAMPLES = 12;
+    private static final long MIN_TOGGLE_INTERVAL_MS = 4500L;
+    private static final int BRIGHTNESS_RAMP_STEPS = 24;
+    private static final long BRIGHTNESS_RAMP_STEP_MS = 70L;
 
     private static volatile boolean mAutoHBMActive = false;
     private ExecutorService mExecutorService;
@@ -48,14 +57,20 @@ public class AutoHBMService extends Service {
     private KeyguardManager mKeyguardManager;
 
     private SharedPreferences mSharedPrefs;
-    private boolean dcDimmingEnabled;
 
     private int mStoredBrightness = -1;
 
+    private final float[] mLuxSamples = new float[LUX_AVG_SAMPLES];
+    private int mLuxSampleIndex = 0;
+    private int mLuxSampleCount = 0;
+
     // Sensor thread'in en son okuduğu lux; worker thread sleep sonrası burayı okur (stale closure değil).
     private volatile float mLastLux = 0f;
-    // Bekleyen disable runnable'ı; lux tekrar yükselirse iptal edilir, duplicate submit önlenir.
+    private volatile long mLastToggleTime = 0L;
+    // Bekleyen enable/disable runnable'ları; lux tersine dönerse iptal edilir.
+    private volatile Future<?> mPendingEnable;
     private volatile Future<?> mPendingDisable;
+    private volatile boolean mTransitionInProgress = false;
     // Çift unregisterReceiver / shutdown koruması için bayraklar.
     private volatile boolean mReceiverRegistered = false;
 
@@ -86,6 +101,7 @@ public class AutoHBMService extends Service {
     }
 
     public void deactivateLightSensorRead() {
+        cancelPendingEnable();
         cancelPendingDisable();
         safeSubmit(() -> {
             try {
@@ -93,49 +109,152 @@ public class AutoHBMService extends Service {
                     mSensorManager.unregisterListener(mSensorEventListener);
                 }
                 mAutoHBMActive = false;
-                enableHBM(false);
+                setHbmImmediate(false);
             } catch (Exception e) {
                 Log.w(TAG, "deactivateLightSensorRead failed", e);
             }
         });
     }
 
-    private void enableHBM(boolean enable) {
+    private int getCurrentBrightness() {
+        try {
+            return Settings.System.getInt(getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS, DEFAULT_BRIGHTNESS);
+        } catch (Exception e) {
+            return DEFAULT_BRIGHTNESS;
+        }
+    }
+
+    private int readBacklightLevel() {
+        final String raw = FileUtils.readOneLine(BACKLIGHT);
+        if (raw == null) {
+            return settingsToBacklight(getCurrentBrightness());
+        }
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            return settingsToBacklight(getCurrentBrightness());
+        }
+    }
+
+    private static int settingsToBacklight(int settingsBrightness) {
+        return (settingsBrightness * BACKLIGHT_MAX) / DEFAULT_BRIGHTNESS;
+    }
+
+    private void rampBacklight(int from, int to) throws InterruptedException {
+        if (from == to) {
+            FileUtils.writeLine(BACKLIGHT, String.valueOf(to));
+            return;
+        }
+        for (int step = 1; step <= BRIGHTNESS_RAMP_STEPS; step++) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+            final int value = from + (to - from) * step / BRIGHTNESS_RAMP_STEPS;
+            FileUtils.writeLine(BACKLIGHT, String.valueOf(value));
+            Thread.sleep(BRIGHTNESS_RAMP_STEP_MS);
+        }
+    }
+
+    private void rampSettingsBrightness(int from, int to) throws InterruptedException {
+        if (from == to) {
+            try {
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.SCREEN_BRIGHTNESS, to);
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to set screen brightness", e);
+            }
+            return;
+        }
+        for (int step = 1; step <= BRIGHTNESS_RAMP_STEPS; step++) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
+            final int value = from + (to - from) * step / BRIGHTNESS_RAMP_STEPS;
+            try {
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.SCREEN_BRIGHTNESS, value);
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to ramp screen brightness", e);
+                return;
+            }
+            Thread.sleep(BRIGHTNESS_RAMP_STEP_MS);
+        }
+    }
+
+    private void transitionToHbmEnabled() throws InterruptedException {
+        if (mStoredBrightness == -1) {
+            mStoredBrightness = getCurrentBrightness();
+        }
+        final int startSettings = mStoredBrightness;
+        final int startBacklight = readBacklightLevel();
+
+        FileUtils.writeLine(HBM, "1");
+        rampBacklight(startBacklight, BACKLIGHT_MAX);
+        rampSettingsBrightness(startSettings, DEFAULT_BRIGHTNESS);
+    }
+
+    private void transitionToHbmDisabled() throws InterruptedException {
+        if (mStoredBrightness == -1) {
+            FileUtils.writeLine(HBM, "0");
+            return;
+        }
+        final int targetSettings = mStoredBrightness;
+        final int targetBacklight = settingsToBacklight(targetSettings);
+        final int startBacklight = readBacklightLevel();
+
+        rampBacklight(startBacklight, targetBacklight);
+        FileUtils.writeLine(HBM, "0");
+        try {
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS, targetSettings);
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to restore screen brightness", e);
+        }
+        mStoredBrightness = -1;
+    }
+
+    private void setHbmImmediate(boolean enable) {
         try {
             if (enable) {
                 if (mStoredBrightness == -1) {
-                    try {
-                        mStoredBrightness = Settings.System.getInt(getContentResolver(),
-                                Settings.System.SCREEN_BRIGHTNESS, DEFAULT_BRIGHTNESS);
-                    } catch (Exception e) {
-                        mStoredBrightness = DEFAULT_BRIGHTNESS;
-                    }
+                    mStoredBrightness = getCurrentBrightness();
                 }
                 FileUtils.writeLine(HBM, "1");
-                FileUtils.writeLine(BACKLIGHT, HBM_BACKLIGHT_VALUE);
-                try {
-                    Settings.System.putInt(getContentResolver(),
-                            Settings.System.SCREEN_BRIGHTNESS, DEFAULT_BRIGHTNESS);
-                } catch (Exception e) {
-                    Log.w(TAG, "Failed to set screen brightness", e);
-                }
+                FileUtils.writeLine(BACKLIGHT, String.valueOf(BACKLIGHT_MAX));
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.SCREEN_BRIGHTNESS, DEFAULT_BRIGHTNESS);
             } else {
                 FileUtils.writeLine(HBM, "0");
                 if (mStoredBrightness != -1) {
-                    FileUtils.writeLine(BACKLIGHT, String.valueOf(mStoredBrightness));
-                    try {
-                        Settings.System.putInt(getContentResolver(),
-                                Settings.System.SCREEN_BRIGHTNESS, mStoredBrightness);
-                    } catch (Exception e) {
-                        Log.w(TAG, "Failed to restore screen brightness", e);
-                    }
+                    Settings.System.putInt(getContentResolver(),
+                            Settings.System.SCREEN_BRIGHTNESS, mStoredBrightness);
                     mStoredBrightness = -1;
                 }
             }
         } catch (Throwable t) {
-            // Sysfs node yoksa / yazma izni yoksa / SELinux denial olursa
-            // executor'u tıkamadan logla ve devam et.
+            Log.e(TAG, "setHbmImmediate(" + enable + ") failed", t);
+        }
+    }
+
+    private void enableHBM(boolean enable) {
+        if (mTransitionInProgress) {
+            return;
+        }
+        mTransitionInProgress = true;
+        try {
+            if (enable) {
+                transitionToHbmEnabled();
+            } else {
+                transitionToHbmDisabled();
+            }
+        } catch (InterruptedException ignored) {
+            setHbmImmediate(false);
+            Thread.currentThread().interrupt();
+        } catch (Throwable t) {
             Log.e(TAG, "enableHBM(" + enable + ") failed", t);
+        } finally {
+            mTransitionInProgress = false;
         }
     }
 
@@ -147,6 +266,42 @@ public class AutoHBMService extends Service {
         }
     }
 
+    private void recordLuxSample(float lux) {
+        mLastLux = lux;
+        mLuxSamples[mLuxSampleIndex] = lux;
+        mLuxSampleIndex = (mLuxSampleIndex + 1) % LUX_AVG_SAMPLES;
+        if (mLuxSampleCount < LUX_AVG_SAMPLES) {
+            mLuxSampleCount++;
+        }
+    }
+
+    private float getSmoothedLux() {
+        if (mLuxSampleCount == 0) {
+            return mLastLux;
+        }
+        float sum = 0f;
+        for (int i = 0; i < mLuxSampleCount; i++) {
+            sum += mLuxSamples[i];
+        }
+        return sum / mLuxSampleCount;
+    }
+
+    private float getOffThreshold(float onThreshold) {
+        return onThreshold * HBM_OFF_THRESHOLD_RATIO;
+    }
+
+    private boolean canToggleState() {
+        return SystemClock.elapsedRealtime() - mLastToggleTime >= MIN_TOGGLE_INTERVAL_MS;
+    }
+
+    private void markToggled() {
+        mLastToggleTime = SystemClock.elapsedRealtime();
+    }
+
+    private boolean isDcDimmingEnabled() {
+        return mSharedPrefs.getBoolean(DcDimmingTileService.DC_DIMMING_ENABLE_KEY, false);
+    }
+
     private final SensorEventListener mSensorEventListener = new SensorEventListener() {
 
         @Override
@@ -155,48 +310,79 @@ public class AutoHBMService extends Service {
                 if (event == null || event.values == null || event.values.length == 0) {
                     return;
                 }
-                final float lux = event.values[0];
-                mLastLux = lux;
+                recordLuxSample(event.values[0]);
+                final float avgLux = getSmoothedLux();
 
                 final KeyguardManager km = mKeyguardManager;
                 final boolean keyguardShowing = km != null && km.isKeyguardLocked();
 
                 final float luxThreshold = readFloatPref(
                         HBMFragment.KEY_AUTO_HBM_THRESHOLD, DEFAULT_LUX_THRESHOLD);
+                final float offThreshold = getOffThreshold(luxThreshold);
+                final long timeToEnableHBM = DEFAULT_ENABLE_TIME_SEC;
                 final long timeToDisableHBM = readLongPref(
                         HBMFragment.KEY_HBM_DISABLE_TIME, DEFAULT_DISABLE_TIME_SEC);
 
-                if (lux > luxThreshold) {
-                    // Bekleyen disable varsa iptal et — lux tekrar yükseldi.
+                if (mTransitionInProgress) {
+                    return;
+                }
+
+                if (avgLux > luxThreshold) {
                     cancelPendingDisable();
                     if ((!mAutoHBMActive || !isCurrentlyEnabled())
-                            && !keyguardShowing && !dcDimmingEnabled) {
-                        mAutoHBMActive = true;
-                        // Tüm HBM dosya I/O'sunu tek thread'de serileştir.
-                        safeSubmit(() -> enableHBM(true));
+                            && !keyguardShowing && !isDcDimmingEnabled()
+                            && canToggleState()) {
+                        final Future<?> pendingEnable = mPendingEnable;
+                        if (pendingEnable == null || pendingEnable.isDone()) {
+                            final float enableLuxThreshold = luxThreshold;
+                            mPendingEnable = safeSubmit(() -> {
+                                if (timeToEnableHBM > 0L) {
+                                    try {
+                                        Thread.sleep(timeToEnableHBM * 1000L);
+                                    } catch (InterruptedException ignored) {
+                                        return;
+                                    }
+                                }
+                                if (getSmoothedLux() > enableLuxThreshold
+                                        && !mAutoHBMActive && canToggleState()
+                                        && !isDcDimmingEnabled()) {
+                                    enableHBM(true);
+                                    if (isCurrentlyEnabled()) {
+                                        mAutoHBMActive = true;
+                                        markToggled();
+                                    }
+                                }
+                            });
+                        }
                     }
-                } else if (lux < luxThreshold) {
-                    // Zaten bekleyen disable varsa yenisini submit etme.
+                } else if (avgLux < offThreshold) {
+                    cancelPendingEnable();
                     final Future<?> pending = mPendingDisable;
                     if (mAutoHBMActive && (pending == null || pending.isDone())) {
+                        final float disableLuxThreshold = offThreshold;
                         mPendingDisable = safeSubmit(() -> {
                             if (timeToDisableHBM > 0L) {
                                 try {
                                     Thread.sleep(timeToDisableHBM * 1000L);
                                 } catch (InterruptedException ignored) {
-                                    return; // cancel edildi
+                                    return;
                                 }
                             }
-                            // Sleep sonrası en güncel lux'u oku — closure'dan eski değer değil.
-                            if (mLastLux < luxThreshold && mAutoHBMActive) {
-                                mAutoHBMActive = false;
+                            if (getSmoothedLux() < disableLuxThreshold && mAutoHBMActive
+                                    && canToggleState()) {
                                 enableHBM(false);
+                                if (!isCurrentlyEnabled()) {
+                                    mAutoHBMActive = false;
+                                    markToggled();
+                                }
                             }
                         });
                     }
+                } else {
+                    cancelPendingEnable();
+                    cancelPendingDisable();
                 }
             } catch (Throwable t) {
-                // Sensor event'i hiçbir koşulda main thread'i çökertmemeli.
                 Log.e(TAG, "onSensorChanged failed", t);
             }
         }
@@ -223,6 +409,14 @@ public class AutoHBMService extends Service {
         } catch (NumberFormatException | ClassCastException | NullPointerException e) {
             return defaultVal;
         }
+    }
+
+    private void cancelPendingEnable() {
+        final Future<?> pending = mPendingEnable;
+        if (pending != null && !pending.isDone()) {
+            pending.cancel(true);
+        }
+        mPendingEnable = null;
     }
 
     private void cancelPendingDisable() {
@@ -330,6 +524,7 @@ public class AutoHBMService extends Service {
         }
 
         // 2) Bekleyen işleri iptal et + temizlik işini kuyruğa koy.
+        cancelPendingEnable();
         cancelPendingDisable();
         safeSubmit(() -> {
             try {
@@ -337,7 +532,7 @@ public class AutoHBMService extends Service {
                     mSensorManager.unregisterListener(mSensorEventListener);
                 }
                 mAutoHBMActive = false;
-                enableHBM(false);
+                setHbmImmediate(false);
             } catch (Exception e) {
                 Log.w(TAG, "onDestroy cleanup failed", e);
             }
