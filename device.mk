@@ -83,7 +83,7 @@ $(call soong_config_set_bool,camera,override_format_from_reserved,true)
 
 # Camx overrides
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/camxoverridesettings.txt:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt
+    $(LOCAL_PATH)/configs/camera/camxoverridesettings.txt:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camxoverridesettings.txt
 
 # DebugFS
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := true

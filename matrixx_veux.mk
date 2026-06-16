@@ -31,6 +31,9 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     BuildFingerprint=Redmi/veux_eea/veux:13/TKQ1.221114.001/V816.0.13.0.TKCEUXM:user/release-keys \
     DeviceProduct=veux_eea
     
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.build.product=veux
+
 # Matrixx Stuff
 WITH_GMS := true
 MATRIXX_MAINTAINER := Amrito

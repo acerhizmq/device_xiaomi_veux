@@ -123,6 +123,11 @@ persist.vendor.camera.multicamera.sat.id=0,3
 camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
 vendor.camera.hal1.packagelist=com.discord,com.whatsapp,com.whatsapp.w4b
 persist.vendor.camera.logInfoMask=false
+persist.vendor.cam.strip3pjfif=true
+persist.vendor.cam.cname_tag=0x808d0000
+persist.vendor.cam.3pyuv_tag=0x808d0001
+persist.vendor.sensors.support_direct_channel=true
+persist.vendor.sensors.enable.rt_task=true
 
 # Dalvik
 dalvik.vm.dex2oat64.enabled=true

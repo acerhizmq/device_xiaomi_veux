@@ -2,6 +2,10 @@
 vendor.camera.sensor.               u:object_r:vendor_camera_sensor_prop:s0
 vendor.camera.sensor.logsystem      u:object_r:vendor_camera_prop:s0
 vendor.panel.display                u:object_r:vendor_camera_prop:s0
+persist.vendor.camera.pkgname      u:object_r:vendor_persist_camera_prop:s0
+persist.vendor.cam.strip3pjfif     u:object_r:vendor_persist_camera_prop:s0
+persist.vendor.cam.cname_tag       u:object_r:vendor_persist_camera_prop:s0
+persist.vendor.cam.3pyuv_tag       u:object_r:vendor_persist_camera_prop:s0
 
 # Display
 ro.vendor.display.type	            u:object_r:vendor_display_prop:s0

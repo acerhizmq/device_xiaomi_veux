@@ -97,6 +97,14 @@ blob_fixups: blob_fixups_user_type = {
         .remove_needed('android.hidl.base@1.0.so'),
     ('vendor/lib64/camera/components/com.qti.node.dewarp.so', 'vendor/lib64/camera/components/com.vidhance.node.processing.so'): blob_fixup()
         .replace_needed('libui.so', 'libui-v34.so'),
+        (
+    'vendor/lib64/hw/camera.qcom.so',
+    'vendor/lib64/hw/com.qti.chi.override.so',
+): blob_fixup()
+    .binary_regex_replace(
+        b'persist.vendor.camera.clientname',
+        b'persist.vendor.camera.pkgname\x00\x00\x00',
+    ),
     'vendor/lib64/camera/components/com.qti.node.mialgocontrol.so': blob_fixup()
         .add_needed('libpiex_shim.so'),
     ('vendor/lib64/libalLDC.so', 'vendor/lib64/libalhLDC.so'): blob_fixup()
