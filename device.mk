@@ -121,10 +121,6 @@ PRODUCT_COPY_FILES += \
 # Dolby
 $(call inherit-product, hardware/dolby/dolby.mk)
 
-# DSPVolumeSynchronizer
-PRODUCT_PACKAGES += \
-    DSPVolumeSynchronizer
-
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
@@ -280,7 +276,7 @@ PRODUCT_PACKAGES += \
     SettingsProviderOverlay2201116SR \
     SettingsProviderOverlay2201116PG \
     SettingsProviderOverlay2201116PI \
-    SettingsOverlay2201116SR  
+    SettingsOverlay2201116SR
 
 PRODUCT_PACKAGES += \
     EuiccOverlay2201116SR
