@@ -29,6 +29,11 @@ if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
     git clone https://github.com/Project-Astraverse/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
 fi
 
+# Merge split MiuiCamera APK (GitHub 100MB limit)
+if [ -f "vendor/xiaomi/miuicamera-veux/vendorsetup.sh" ]; then
+    bash vendor/xiaomi/miuicamera-veux/vendorsetup.sh
+fi
+
 # Dolby
 if [ ! -d "hardware/dolby" ]; then
     git clone https://github.com/oscaro-resources/hardware_dolby.git hardware/dolby
