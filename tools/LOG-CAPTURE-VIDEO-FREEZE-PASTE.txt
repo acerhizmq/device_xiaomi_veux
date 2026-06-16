@@ -1,0 +1,38 @@
+Video donma / takilma log yakalama — kurulum
+=============================================
+
+--- YONTEM A: Windows PC (.bat) — ONERILEN ---
+
+  1) USB debugging acik, telefon bagli
+  2) Calistir: LOG-CAPTURE-VIDEO-FREEZE.bat
+  3) YouTube Shorts / IG Reels / TikTok'ta donmayi tetikle
+  4) PC'de bir tusa bas
+  5) Olusan lunaris-video-stutter-logs-*.zip dosyasini gonder
+
+  Toplanan: adb logcat (-b all), kernel dmesg once/sonra, last_kmsg,
+            dumpsys (codec, SurfaceFlinger, display, mem, power),
+            sysfs FPS/GPU/thermal, getprop, tombstone (varsa)
+
+--- YONTEM B: PC'den telefona script push ---
+
+  cd lunaris/device/xiaomi/veux/tools
+  bash LOG-CAPTURE-VIDEO-FREEZE-PUSH.sh
+
+  Telefonda (root shell):
+    sh /data/local/tmp/vf-cap.sh          # testten HEMEN sonra
+    sh /data/local/tmp/vf-cap.sh watch    # once baslat, 3dk icinde test yap
+
+  Cikti: /sdcard/Download/lunaris-video-stutter-logs-*/
+
+--- YONTEM C: Termux (PC yok) ---
+
+  cp LOG-CAPTURE-VIDEO-FREEZE-TERMUX.sh ~/
+  bash ~/LOG-CAPTURE-VIDEO-FREEZE-TERMUX.sh
+
+--- TEST IPUCLARI ---
+
+  - Goruntu donuyor, ses devam ediyorsa: tipik video decoder / SurfaceFlinger
+  - Kaydirinca takilma: refresh rate / kgsl / jank
+  - Isinma sonrasi: thermal throttle satirlari kernel'de
+
+  analysis/summary.txt otomatik ozet uretir.
