@@ -81,8 +81,10 @@ int32_t getTorchStrengthLevelExt() {
 }
 
 void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
+    // HAL setTorchMode(false) already extinguished the torch. sysfs strength=0 here
+    // blocks cameraserver ~9s (CCI timeout on 3 nodes) and stalls QS reopen.
     if (!enabled) {
-        torchStrength = 0;
+        return;
     }
     // Clamp to valid kernel range (0-127)
     if (torchStrength > 127) torchStrength = 127;
@@ -92,8 +94,10 @@ void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
 }
 
 void setTorchModeExt(bool enabled) {
-    int32_t strength = getTorchDefaultStrengthLevelExt();
-    setTorchStrengthLevelExt(enabled ? strength : 0, enabled);
+    if (!enabled) {
+        return;
+    }
+    setTorchStrengthLevelExt(getTorchDefaultStrengthLevelExt(), true);
 }
 
 int32_t getCameraCaptureFlashStrengthLevelExt() {
