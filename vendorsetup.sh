@@ -15,23 +15,8 @@ if [ ! -d "packages/apps/ViPER4AndroidFX" ]; then
     git clone https://github.com/AxionAOSP/android_packages_apps_ViPER4AndroidFX.git -b v4a packages/apps/ViPER4AndroidFX
 fi
 
-# MiuiCamera (Disabled for Leica variant)
-# if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
-#     git clone https://github.com/frost-testzone/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux
-# fi
-
-# Leica Camera Integration
-#if [ ! -d "vendor/xiaomi/camera" ]; then
-#    git clone https://gitlab.com/isaiahscape/vendor_xiaomi_camera.git vendor/xiaomi/camera
-#fi
-
 if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
     git clone https://github.com/Project-Astraverse/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
-fi
-
-# Merge split MiuiCamera APK (GitHub 100MB limit)
-if [ -f "vendor/xiaomi/miuicamera-veux/vendorsetup.sh" ]; then
-    bash vendor/xiaomi/miuicamera-veux/vendorsetup.sh
 fi
 
 # Dolby

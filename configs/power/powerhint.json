@@ -125,7 +125,7 @@
     },
     {
       "Name": "DoubleTapToWake",
-      "Path": "/sys/devices/platform/soc/4c88000.i2c/i2c-2/2-0038/fts_gesture_mode",
+      "Path": "/proc/tp_gesture",
       "Values": ["0", "1"],
       "DefaultIndex": 0,
       "ResetOnInit": true
