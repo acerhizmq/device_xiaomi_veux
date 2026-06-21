@@ -257,15 +257,6 @@ on property:sys.boot_completed=1 && property:vendor.usb.uvc.function.init=1
     symlink /config/usb_gadget/g1/functions/uvc.0/streaming/header/h1 /config/usb_gadget/g1/functions/uvc.0/streaming/class/hs/h1
 
 
-
-# Torch Strength Native Bridge (Mk9 Ultimate)
-on property:persist.flashlight.strength=*
-    write /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength ${persist.flashlight.strength}
-
-# Mk9 Ultimate: Apply saved brightness on boot
-on property:sys.boot_completed=1
-    write /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength ${persist.flashlight.strength}
-
 on boot
 # MK9 - Fener parlaklık dosyası için okuma/yazma izinleri
     chown system system /sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength
