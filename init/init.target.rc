@@ -108,6 +108,8 @@ on boot
 
     chmod 0644 /mnt/vendor/persist/audio/aw_cali.bin
     chmod 0644 /mnt/vendor/persist/audio/fsm_calib.bin
+    chmod 0644 /mnt/vendor/persist/audio/us_manual_cal
+    chmod 0644 /mnt/vendor/persist/audio/elliptic_manual_calibration
 
     mkdir /data/vendor_de/0/goodix 0770 system system
 
