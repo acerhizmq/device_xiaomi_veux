@@ -217,7 +217,7 @@ on property:init.svc.vendor.per_mgr=running
 on property:sys.shutdown.requested=*
     stop vendor.per_proxy
 
-service mi_thermald /system/vendor/bin/mi_thermald	
+service mi_thermald /vendor/bin/mi_thermald
     class main
     user root
     group system
@@ -236,11 +236,16 @@ on property:sys.boot_completed=1
     # Enable PowerHAL hint processing
     setprop vendor.powerhal.init 1
 
+    # mi_thermald workspace + daemon (video/youtube/streaming thermal profiles)
+    mkdir /data/vendor/thermal 0770 root system
+    mkdir /data/vendor/thermal/config 0770 root system
+    start mi_thermald
+
 # Thermal Profiles permissions
     chmod 0664 /sys/class/thermal/thermal_message/sconfig
     chown system system /sys/class/thermal/thermal_message/sconfig
     chmod 0666 /sys/class/thermal/thermal_message/temp_state
-    chown system system /sys/class/thermal/thermal_message/temp_stat
+    chown system system /sys/class/thermal/thermal_message/temp_state
 
 # USB 
 on property:sys.boot_completed=1 && property:vendor.usb.uvc.function.init=1
