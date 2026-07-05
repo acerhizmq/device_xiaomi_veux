@@ -17,8 +17,6 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 # Lunaris flags
 WITH_GMS := true
 WITH_BCR := true
-
-# Display and specific Lunaris settings
 TARGET_CUSTOM_UDFPS := false
 TARGET_OPTIMIZED_DEXOPT := true
 TARGET_SUPPORTED_REFRESH_RATES := 60,120
@@ -26,6 +24,10 @@ SURFACE_FLINGER_BOOST := true
 HBM_SUPPORTED := true
 HBM_NODE := /sys/devices/platform/soc/5e00000.qcom,mdss_mdp/drm/card0/card0-DSI-1/hbm
 PRODUCT_NO_CAMERA := true
+TARGET_USE_MAPS := true
+TARGET_USE_FILES := true
+USE_REALITY_ENGINE := true
+TARGET_USE_GPHOTOS := true
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.lunaris.maintainer=acerhizm \
