@@ -4,4 +4,5 @@
 runtime_resource_overlay {
     name: "UpdaterOverlayVEUX",
     certificate: "platform",
+    system_ext_specific: true,
 }
