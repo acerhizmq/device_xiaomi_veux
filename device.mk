@@ -45,7 +45,7 @@ PRODUCT_PACKAGES += \
     audio.bluetooth.default \
     audio.primary.holi \
     audio.r_submix.default \
-    audio.usbv2.default
+    audio.usb.default
 
 PRODUCT_PACKAGES += \
     audioadsprpcd \
@@ -181,6 +181,9 @@ PRODUCT_PACKAGES += \
     init.recovery.qcom.rc \
     init.target.rc \
     ueventd.qcom.rc
+
+# ION
+$(call soong_config_set_bool,libion,legacy_impl,true)
 
 # IPACM
 PRODUCT_PACKAGES += \
@@ -378,7 +381,7 @@ PRODUCT_SHIPPING_API_LEVEL := 30
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/google/interfaces \
-    hardware/google/pixel \
+    hardware/google/pixel/power-libperfmgr \
     hardware/lineage/interfaces/power-libperfmgr \
     hardware/qcom-caf/common/libqti-perfd-client \
     hardware/qcom-caf/wlan \
