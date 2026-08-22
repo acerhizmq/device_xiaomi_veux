@@ -4,6 +4,7 @@
 #
 
 PRODUCT_MAKEFILES := \
+    $(LOCAL_DIR)/lineage_veux.mk \
     $(LOCAL_DIR)/rising_veux.mk
 
 COMMON_LUNCH_CHOICES := \
