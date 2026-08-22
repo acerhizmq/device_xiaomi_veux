@@ -11,31 +11,21 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from device.
 $(call inherit-product, $(LOCAL_PATH)/device.mk)
 
-# Inherit some common Lunaris stuff.
+# Inherit some common RisingOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
-# Lunaris flags
+
+# Rising flags
+RISING_MAINTAINER := acerhizm
+RISING_CHIPSET := SM6375
 WITH_GMS := true
-WITH_BCR := true
-TARGET_CUSTOM_UDFPS := false
-TARGET_OPTIMIZED_DEXOPT := true
-TARGET_SUPPORTED_REFRESH_RATES := 60,120
-SURFACE_FLINGER_BOOST := true
-HBM_SUPPORTED := true
-HBM_NODE := /sys/devices/platform/soc/5e00000.qcom,mdss_mdp/drm/card0/card0-DSI-1/hbm
-PRODUCT_NO_CAMERA := true
-TARGET_USE_MAPS := true
-TARGET_USE_FILES := true
-USE_REALITY_ENGINE := true
-TARGET_USE_GPHOTOS := true
 TARGET_ENABLE_BLUR := true
-WITH_GMS_COMMS_SUITE := true
-USE_ADVANCED_DISPLAY_COLOR := true
-TARGET_USE_WALLPAPERS := true
-BYPASS_CHARGE_SUPPORTED := true
+PRODUCT_NO_CAMERA := true
+TARGET_INCLUDE_LIVE_WALLPAPERS := true
+TARGET_SUPPORTS_GOOGLE_RECORDER := true
+TARGET_SUPPORTS_QUICK_TAP := true
 
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.lunaris.maintainer=acerhizm \
     ro.product.mod_device=veux_global \
     ro.miui.ui.version.name=V140 \
     ro.miui.ui.version.code=13 \
@@ -50,7 +40,7 @@ PRODUCT_BRAND := Redmi
 PRODUCT_DEVICE := veux
 PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_MODEL := 2201116SG
-PRODUCT_NAME := lineage_veux
+PRODUCT_NAME := rising_veux
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
