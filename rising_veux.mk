@@ -20,6 +20,7 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 # Rising flags
 RISING_MAINTAINER := acerhizm
 RISING_CHIPSET := Snapdragon® 695
+RISING_BUILDTYPE := COMMUNITY
 WITH_GMS := true
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 TARGET_ENABLE_BLUR := true
@@ -27,6 +28,12 @@ PRODUCT_NO_CAMERA := true
 TARGET_INCLUDE_LIVE_WALLPAPERS := true
 TARGET_SUPPORTS_GOOGLE_RECORDER := true
 TARGET_SUPPORTS_QUICK_TAP := true
+PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.rising.chipset=Snapdragon® 695 \
+    ro.rising.maintainer=acerhizm \
+    ro.rising.releasetype=COMMUNITY
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.product.mod_device=veux_global \
