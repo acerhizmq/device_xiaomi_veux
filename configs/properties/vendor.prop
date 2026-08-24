@@ -235,6 +235,9 @@ vendor.netflix.bsp_rev=Q4350-32962-1
 
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so
+vendor.perf.framepacing.enable=1
+persist.sys.ax_hwui_renderer=skiavk
+debug.hwui.renderer=skiavk
 
 # RIL
 persist.radio.multisim.config=dsds
