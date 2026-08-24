@@ -16,7 +16,7 @@ if [ ! -d "packages/apps/ViPER4AndroidFX" ]; then
 fi
 
 if [ ! -d "vendor/xiaomi/miuicamera-veux" ]; then
-    git clone https://github.com/Project-Astraverse/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
+    git clone https://github.com/UnstableMetals/vendor_xiaomi_miuicamera-veux.git vendor/xiaomi/miuicamera-veux --depth=1
 fi
 
 # Dolby
