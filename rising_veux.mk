@@ -29,10 +29,6 @@ PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
 # Inherit some common RisingOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.rising.chipset=Snapdragon® 695 \
-    ro.rising.maintainer=acerhizm \
-    ro.rising.releasetype=COMMUNITY
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.product.mod_device=veux_global \
