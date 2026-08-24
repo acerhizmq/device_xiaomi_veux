@@ -19,8 +19,9 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 # Rising flags
 RISING_MAINTAINER := acerhizm
-RISING_CHIPSET := SM6375
+RISING_CHIPSET := Snapdragon® 695
 WITH_GMS := true
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 TARGET_ENABLE_BLUR := true
 PRODUCT_NO_CAMERA := true
 TARGET_INCLUDE_LIVE_WALLPAPERS := true
