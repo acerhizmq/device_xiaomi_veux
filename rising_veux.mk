@@ -13,10 +13,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from device.
 $(call inherit-product, $(LOCAL_PATH)/device.mk)
 
-# Inherit some common RisingOS stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
-
-
 # Rising flags
 RISING_MAINTAINER := acerhizm
 RISING_CHIPSET := Snapdragon® 695
@@ -29,6 +25,9 @@ TARGET_INCLUDE_LIVE_WALLPAPERS := true
 TARGET_SUPPORTS_GOOGLE_RECORDER := true
 TARGET_SUPPORTS_QUICK_TAP := true
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
+
+# Inherit some common RisingOS stuff.
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rising.chipset=Snapdragon® 695 \
