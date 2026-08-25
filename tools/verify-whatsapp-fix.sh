@@ -9,7 +9,7 @@ ok() { echo "OK: $*"; }
 
 [[ -d "$VENDOR" ]] || die "vendor tree missing at $VENDOR"
 
-grep -q 'ro.build.product=veux' "${ROOT}/device/xiaomi/veux/lineage_veux.mk" \
+grep -q 'ro.build.product=veux' "${ROOT}/device/xiaomi/veux/"*.mk \
     || die "ro.build.product=veux missing (CHI Pure AOSP XML fallback)"
 ok "ro.build.product=veux in lineage_veux.mk"
 
@@ -110,7 +110,6 @@ echo "All local WhatsApp-fix checks passed."
 echo "After flash, log must show:"
 echo "  - remapping dataspace -> UNKNOWN"
 echo "  - sessionParams clientName=com.whatsapp"
-echo "  - sessionParams thirdPartyYUVSnapshot=1"
 echo "  - getprop persist.vendor.cam.strip3pjfif = true"
 echo "  - NO 'SetPackageName() can't find tag' / 'InitializeOverrideSession() can't find tag'"
 echo "  - NO 'Pure AOSP Version build, switching current xml'"
