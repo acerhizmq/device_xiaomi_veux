@@ -4,3 +4,6 @@ allow cameraserver sysfs_leds:dir search;
 
 # Xiaomi CHI reads persist.vendor.camera.pkgname for 3rd-party app detection.
 set_prop(cameraserver, vendor_persist_camera_prop)
+
+# Flashlight strength
+get_prop(cameraserver, acer_flashlight_prop)

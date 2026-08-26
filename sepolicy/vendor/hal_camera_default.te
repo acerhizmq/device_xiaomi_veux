@@ -15,6 +15,7 @@ set_prop(hal_camera_default, vendor_persist_camera_prop)
 get_prop(hal_camera_default, build_prop)
 get_prop(hal_camera_default, vendor_camera_prop)
 get_prop(hal_camera_default, vendor_video_prop)
+get_prop(hal_camera_default, acer_flashlight_prop)
 
 allow hal_camera_default hal_graphics_mapper_hwservice:hwservice_manager find;
 allow hal_camera_default fwk_sensor_hwservice:hwservice_manager find;

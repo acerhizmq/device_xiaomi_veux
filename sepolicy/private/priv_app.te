@@ -1,0 +1,3 @@
+# Allow MiuiCamera / Qigsaw dynamic modules (Vlog, Mimoji, Panorama) to map and execute native libraries from app data
+allow priv_app privapp_data_file:file { execute execute_no_trans r_file_perms };
+
