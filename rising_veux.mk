@@ -15,7 +15,7 @@ $(call inherit-product, $(LOCAL_PATH)/device.mk)
 
 # Rising flags
 RISING_MAINTAINER := acerhizm
-RISING_CHIPSET := Snapdragon® 695 5G
+RISING_CHIPSET := Snapdragon® 695
 RISING_BUILDTYPE := COMMUNITY
 WITH_GMS := true
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
@@ -31,10 +31,6 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.rising.maintainer=acerhizm \
-    ro.rising.chipset=Snapdragon® 695 5G \
-    ro.soc.manufacturer=Qualcomm \
-    ro.soc.model=SM6375 \
     ro.product.mod_device=veux_global \
     ro.miui.ui.version.name=V140 \
     ro.miui.ui.version.code=13 \
