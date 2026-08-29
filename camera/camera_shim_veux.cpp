@@ -104,6 +104,7 @@ struct DeviceWrapper {
     orig_configure_streams_fn orig_configure_streams;
     orig_close_fn orig_close;
     int camera_id;
+    camera_metadata_t* injected_session_params;
 };
 
 // ============================================================================
@@ -140,6 +141,8 @@ static bool is_privileged_package(const std::string& pkg) {
                  "com.android.camera,org.codeaurora.snapcam,com.shamim.cam,com.google.android.GoogleCamera,com.xiaomi.camera");
     
     char* list_copy = strdup(priv_list);
+    if (!list_copy) return false;
+
     char* saveptr = nullptr;
     char* token = strtok_r(list_copy, ",", &saveptr);
     bool privileged = false;
@@ -158,20 +161,22 @@ static bool is_privileged_package(const std::string& pkg) {
 // 2. Dynamic Vendor Tag Descriptor Overlay
 // ============================================================================
 static int shim_vt_get_tag_count(const vendor_tag_ops_t *v) {
+    (void)v;
     int orig_count = 0;
     if (g_real_vendor_tag_ops.get_tag_count) {
-        orig_count = g_real_vendor_tag_ops.get_tag_count(v);
+        orig_count = g_real_vendor_tag_ops.get_tag_count(&g_real_vendor_tag_ops);
     }
     return orig_count + 2;
 }
 
 static void shim_vt_get_all_tags(const vendor_tag_ops_t *v, uint32_t *tag_array) {
+    (void)v;
     int orig_count = 0;
     if (g_real_vendor_tag_ops.get_tag_count) {
-        orig_count = g_real_vendor_tag_ops.get_tag_count(v);
+        orig_count = g_real_vendor_tag_ops.get_tag_count(&g_real_vendor_tag_ops);
     }
     if (g_real_vendor_tag_ops.get_all_tags && tag_array) {
-        g_real_vendor_tag_ops.get_all_tags(v, tag_array);
+        g_real_vendor_tag_ops.get_all_tags(&g_real_vendor_tag_ops, tag_array);
     }
     if (tag_array) {
         tag_array[orig_count] = get_client_name_tag();
@@ -180,16 +185,18 @@ static void shim_vt_get_all_tags(const vendor_tag_ops_t *v, uint32_t *tag_array)
 }
 
 static const char *shim_vt_get_section_name(const vendor_tag_ops_t *v, uint32_t tag) {
+    (void)v;
     if (tag == get_client_name_tag() || tag == get_third_party_yuv_tag()) {
         return XIAOMI_SECTION_SESSIONPARAMS;
     }
     if (g_real_vendor_tag_ops.get_section_name) {
-        return g_real_vendor_tag_ops.get_section_name(v, tag);
+        return g_real_vendor_tag_ops.get_section_name(&g_real_vendor_tag_ops, tag);
     }
     return nullptr;
 }
 
 static const char *shim_vt_get_tag_name(const vendor_tag_ops_t *v, uint32_t tag) {
+    (void)v;
     if (tag == get_client_name_tag()) {
         return XIAOMI_TAG_NAME_CLIENT_NAME;
     }
@@ -197,17 +204,18 @@ static const char *shim_vt_get_tag_name(const vendor_tag_ops_t *v, uint32_t tag)
         return XIAOMI_TAG_NAME_THIRD_PARTY_YUV;
     }
     if (g_real_vendor_tag_ops.get_tag_name) {
-        return g_real_vendor_tag_ops.get_tag_name(v, tag);
+        return g_real_vendor_tag_ops.get_tag_name(&g_real_vendor_tag_ops, tag);
     }
     return nullptr;
 }
 
 static int shim_vt_get_tag_type(const vendor_tag_ops_t *v, uint32_t tag) {
+    (void)v;
     if (tag == get_client_name_tag() || tag == get_third_party_yuv_tag()) {
         return TYPE_BYTE;
     }
     if (g_real_vendor_tag_ops.get_tag_type) {
-        return g_real_vendor_tag_ops.get_tag_type(v, tag);
+        return g_real_vendor_tag_ops.get_tag_type(&g_real_vendor_tag_ops, tag);
     }
     return -1;
 }
@@ -254,8 +262,13 @@ static bool load_real_hal() {
 // ============================================================================
 // 4. Session Parameters Injection & Stream Sanitization
 // ============================================================================
-static void inject_session_parameters(camera3_stream_configuration_t *stream_list, const std::string& pkg) {
-    if (!stream_list) return;
+static void inject_session_parameters(DeviceWrapper* wrapper, camera3_stream_configuration_t *stream_list, const std::string& pkg) {
+    if (!wrapper || !stream_list) return;
+
+    if (wrapper->injected_session_params) {
+        free_camera_metadata(wrapper->injected_session_params);
+        wrapper->injected_session_params = nullptr;
+    }
 
     camera_metadata_t* current_meta = (camera_metadata_t*)stream_list->session_parameters;
     size_t current_entry_count = current_meta ? get_camera_metadata_entry_count(current_meta) : 0;
@@ -293,6 +306,7 @@ static void inject_session_parameters(camera3_stream_configuration_t *stream_lis
         add_camera_metadata_entry(new_meta, cname_tag, pkg_bytes.data(), pkg_bytes.size());
     }
 
+    wrapper->injected_session_params = new_meta;
     stream_list->session_parameters = new_meta;
 }
 
@@ -336,7 +350,7 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
         }
 
         // 2. Inject Xiaomi session parameters (clientName + thirdPartyYUVSnapshot)
-        inject_session_parameters(stream_list, effective_pkg);
+        inject_session_parameters(wrapper, stream_list, effective_pkg);
     } else {
         ALOGI("%s: [Camera %d] Privileged client '%s' detected, retaining native 108MP configuration",
               __FUNCTION__, wrapper->camera_id, current_pkg.c_str());
@@ -353,6 +367,12 @@ static int shim_device_close(hw_device_t* dev) {
     if (wrapper) {
         orig_close_fn orig_close = wrapper->orig_close;
         camera3_device_t* real_dev = wrapper->real_dev;
+
+        if (wrapper->injected_session_params) {
+            free_camera_metadata(wrapper->injected_session_params);
+            wrapper->injected_session_params = nullptr;
+        }
+
         delete wrapper;
 
         // Reset package name property on camera closing
@@ -392,6 +412,7 @@ static int shim_module_open(const hw_module_t* module, const char* id, hw_device
     wrapper->real_dev = real_cam3;
     wrapper->camera_id = id ? atoi(id) : 0;
     wrapper->orig_close = real_cam3->common.close;
+    wrapper->injected_session_params = nullptr;
 
     memcpy(&wrapper->wrapped_ops, real_cam3->ops, sizeof(camera3_device_ops_t));
     wrapper->orig_configure_streams = real_cam3->ops->configure_streams;
