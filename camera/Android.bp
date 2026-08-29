@@ -1,3 +1,39 @@
+//
+// Copyright (C) 2026 The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_library_shared {
+    name: "camera.qcom",
+    owner: "xiaomi",
+    srcs: ["camera_shim_veux.cpp"],
+    shared_libs: [
+        "libbase",
+        "libcutils",
+        "libdl",
+        "liblog",
+        "libcamera_metadata",
+        "libhardware",
+        "libutils",
+    ],
+    include_dirs: [
+        "system/media/camera/include",
+        "hardware/libhardware/include",
+    ],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
+    relative_install_path: "hw",
+    proprietary: true,
+    sanitize: {
+        cfi: false,
+    },
+}
+
 cc_library_static {
     name: "libcameraservice_extension.veux",
     srcs: ["CameraProviderExtension.cpp"],
