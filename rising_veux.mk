@@ -33,6 +33,9 @@ TARGET_INCLUDE_BCR := true
 # Inherit some common RisingOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
+# Private release signing keys
+-include vendor/lineage-priv/keys/keys.mk
+
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.product.mod_device=veux_global \
