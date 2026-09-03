@@ -221,11 +221,82 @@ static int shim_vt_get_tag_type(const vendor_tag_ops_t *v, uint32_t tag) {
 }
 
 // ============================================================================
+// 2.5 Qualcomm CamX ChiContext DeviceSettings Hook
+// ============================================================================
+// Fix for Camera HAL crash-loop (SIGSEGV / CFI-abort in ExtensionModule::GetDevicesSettings
+// calling uninitialized g_chiContextOps[22] at offset +0xb0 with NULL pointer
+// during early boot get_number_of_cameras probe).
+struct ChiDummyConfigData {
+    uint32_t count = 0;
+    void* settings = nullptr;
+};
+
+static ChiDummyConfigData g_dummy_config_data;
+static uint8_t g_dummy_device_settings[128 * 64] = {0};
+
+// Signature expected by ExtensionModule::GetDevicesSettings():
+// int (*)(ConfigData** ppConfig, DeviceSettings** ppDeviceSettings)
+static int safe_chi_get_device_settings(void* ppConfigOut, void* ppDeviceSettingsOut) {
+    if (ppConfigOut) {
+        *(void**)ppConfigOut = &g_dummy_config_data;
+    }
+    if (ppDeviceSettingsOut) {
+        *(void**)ppDeviceSettingsOut = g_dummy_device_settings;
+    }
+    return 0;
+}
+
+static void patch_chi_override_ops() {
+    static bool s_patched = false;
+    if (s_patched) return;
+
+    static const char* kChiCandidatePaths[] = {
+        "/vendor/lib64/hw/com.qti.chi.override.so",
+        "/system/vendor/lib64/hw/com.qti.chi.override.so",
+        "/odm/lib64/hw/com.qti.chi.override.so",
+        "com.qti.chi.override.so",
+    };
+
+    void* chi_handle = nullptr;
+    for (const char* chi_path : kChiCandidatePaths) {
+        if (access(chi_path, R_OK) == 0 || chi_path[0] != '/') {
+            chi_handle = dlopen(chi_path, RTLD_NOW | RTLD_GLOBAL);
+            if (chi_handle) {
+                ALOGI("%s: Loaded CHI override library from '%s'", __FUNCTION__, chi_path);
+                break;
+            }
+        }
+    }
+
+    if (!chi_handle) {
+        ALOGW("%s: Could not open com.qti.chi.override.so: %s", __FUNCTION__, dlerror());
+        return;
+    }
+
+    void** g_chiContextOps = (void**)dlsym(chi_handle, "g_chiContextOps");
+    if (g_chiContextOps) {
+        // Offset 0xb0 = 176 bytes / 8 = 22nd function pointer slot
+        const size_t kGetDevicesSettingsIdx = 0xb0 / sizeof(void*);
+        if (g_chiContextOps[kGetDevicesSettingsIdx] == nullptr) {
+            g_chiContextOps[kGetDevicesSettingsIdx] = (void*)&safe_chi_get_device_settings;
+            ALOGI("%s: Successfully hooked g_chiContextOps[22] (+0xb0) with safe_chi_get_device_settings!", __FUNCTION__);
+            s_patched = true;
+        } else {
+            ALOGI("%s: g_chiContextOps[22] already populated (%p)", __FUNCTION__, g_chiContextOps[kGetDevicesSettingsIdx]);
+            s_patched = true;
+        }
+    } else {
+        ALOGW("%s: Symbol 'g_chiContextOps' not found in CHI override: %s", __FUNCTION__, dlerror());
+    }
+}
+
+// ============================================================================
 // 3. Safe Real HAL Loader
 // ============================================================================
 static bool load_real_hal() {
     pthread_mutex_lock(&g_init_lock);
     if (g_real_camera_module != nullptr) {
+        patch_chi_override_ops();
         pthread_mutex_unlock(&g_init_lock);
         return true;
     }
@@ -240,6 +311,7 @@ static bool load_real_hal() {
                 g_real_camera_module = (camera_module_t*)dlsym(g_real_hal_handle, HAL_MODULE_INFO_SYM_AS_STR);
                 if (g_real_camera_module) {
                     ALOGI("%s: Successfully loaded real camera HAL from '%s' (HMI found)", __FUNCTION__, path);
+                    patch_chi_override_ops();
                     pthread_mutex_unlock(&g_init_lock);
                     return true;
                 } else {
@@ -428,12 +500,15 @@ static int shim_module_open(const hw_module_t* module, const char* id, hw_device
 }
 
 static int shim_get_number_of_cameras(void) {
-    if (!load_real_hal()) return 0;
-    return g_real_camera_module->get_number_of_cameras();
+    if (!load_real_hal()) return 4;
+    patch_chi_override_ops();
+    int count = g_real_camera_module->get_number_of_cameras();
+    return count > 0 ? count : 4;
 }
 
 static int shim_get_camera_info(int camera_id, struct camera_info *info) {
     if (!load_real_hal()) return -ENODEV;
+    patch_chi_override_ops();
     return g_real_camera_module->get_camera_info(camera_id, info);
 }
 
@@ -481,6 +556,7 @@ static int shim_set_torch_mode(const char* camera_id, bool enabled) {
 
 static int shim_init() {
     if (!load_real_hal()) return -ENODEV;
+    patch_chi_override_ops();
     if (g_real_camera_module->init) {
         return g_real_camera_module->init();
     }
