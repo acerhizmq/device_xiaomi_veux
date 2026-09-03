@@ -16,7 +16,6 @@ $(call inherit-product, $(LOCAL_PATH)/device.mk)
 # Rising flags
 RISING_MAINTAINER := acerhizm
 RISING_CHIPSET := Snapdragon® 695
-RISING_BUILDTYPE := COMMUNITY
 WITH_GMS := true
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 TARGET_ENABLE_BLUR := true
@@ -25,13 +24,13 @@ TARGET_INCLUDE_LIVE_WALLPAPERS := true
 TARGET_SUPPORTS_GOOGLE_RECORDER := true
 TARGET_SUPPORTS_QUICK_TAP := true
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
-TARGET_ENABLE_PERF_ANIM_OVERRIDE := true
 PERF_ANIM_OVERRIDE := true
 WITH_BCR := true
-TARGET_INCLUDE_BCR := true
 
 # Inherit some common RisingOS stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+
+override RISING_BUILDTYPE := COMMUNITY
 
 # Private release signing keys
 -include vendor/lineage-priv/keys/keys.mk
