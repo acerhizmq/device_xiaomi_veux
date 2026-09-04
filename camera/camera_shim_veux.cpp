@@ -60,6 +60,8 @@ static const char* kCandidateRealHalPaths[] = {
     REAL_HAL_PRIMARY_PATH,
     "/system/vendor/lib64/hw/camera.qcom.real.so",
     "/odm/lib64/hw/camera.qcom.real.so",
+    "/vendor/lib64/camera/com.qti.sensor.imx318.so",
+    "/vendor/lib64/camera/com.qti.sensor.imx334.so",
 };
 
 // Xiaomi custom vendor tag section and names
@@ -98,14 +100,20 @@ static uint32_t get_third_party_yuv_tag() {
 typedef int (*orig_configure_streams_fn)(const struct camera3_device *, camera3_stream_configuration_t *);
 typedef int (*orig_close_fn)(hw_device_t*);
 
-struct DeviceWrapper {
-    camera3_device_t* real_dev;
-    camera3_device_ops_t wrapped_ops;
+#define MAX_CONCURRENT_CAMERAS 8
+
+struct CameraSessionContext {
+    const camera3_device_t* dev;
     orig_configure_streams_fn orig_configure_streams;
     orig_close_fn orig_close;
+    camera3_device_ops_t wrapped_ops;
     int camera_id;
     camera_metadata_t* injected_session_params;
+    bool in_use;
 };
+
+static CameraSessionContext g_sessions[MAX_CONCURRENT_CAMERAS];
+static pthread_mutex_t g_sessions_lock = PTHREAD_MUTEX_INITIALIZER;
 
 // ============================================================================
 // 1. Privileged Client & Caller Detection
@@ -323,12 +331,12 @@ static bool load_real_hal() {
 // ============================================================================
 // 4. Session Parameters Injection & Stream Sanitization
 // ============================================================================
-static void inject_session_parameters(DeviceWrapper* wrapper, camera3_stream_configuration_t *stream_list, const std::string& pkg) {
-    if (!wrapper || !stream_list) return;
+static void inject_session_parameters(CameraSessionContext* ctx, camera3_stream_configuration_t *stream_list, const std::string& pkg) {
+    if (!ctx || !stream_list) return;
 
-    if (wrapper->injected_session_params) {
-        free_camera_metadata(wrapper->injected_session_params);
-        wrapper->injected_session_params = nullptr;
+    if (ctx->injected_session_params) {
+        free_camera_metadata(ctx->injected_session_params);
+        ctx->injected_session_params = nullptr;
     }
 
     camera_metadata_t* current_meta = (camera_metadata_t*)stream_list->session_parameters;
@@ -367,7 +375,7 @@ static void inject_session_parameters(DeviceWrapper* wrapper, camera3_stream_con
         add_camera_metadata_entry(new_meta, cname_tag, pkg_bytes.data(), pkg_bytes.size());
     }
 
-    wrapper->injected_session_params = new_meta;
+    ctx->injected_session_params = new_meta;
     stream_list->session_parameters = new_meta;
 }
 
@@ -376,9 +384,18 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
         return -EINVAL;
     }
 
-    DeviceWrapper* wrapper = (DeviceWrapper*)dev->priv;
-    if (!wrapper || !wrapper->real_dev || !wrapper->orig_configure_streams) {
-        ALOGE("%s: Invalid wrapper or real device handle!", __FUNCTION__);
+    pthread_mutex_lock(&g_sessions_lock);
+    CameraSessionContext* ctx = nullptr;
+    for (int i = 0; i < MAX_CONCURRENT_CAMERAS; i++) {
+        if (g_sessions[i].in_use && g_sessions[i].dev == dev) {
+            ctx = &g_sessions[i];
+            break;
+        }
+    }
+    pthread_mutex_unlock(&g_sessions_lock);
+
+    if (!ctx || !ctx->orig_configure_streams) {
+        ALOGE("%s: Device %p not found in active sessions!", __FUNCTION__, dev);
         return -EINVAL;
     }
 
@@ -403,7 +420,7 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
                     
                     ALOGI("%s: [Camera %d] Sanitizing preview stream (fmt %#x %ux%u) dataspace "
                           "0x%x -> UNKNOWN (0x0) for package '%s'",
-                          __FUNCTION__, wrapper->camera_id, s->format, s->width, s->height,
+                          __FUNCTION__, ctx->camera_id, s->format, s->width, s->height,
                           s->data_space, effective_pkg.c_str());
                     s->data_space = HAL_DATASPACE_UNKNOWN;
                 }
@@ -411,38 +428,50 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
         }
 
         // 2. Inject Xiaomi session parameters (clientName + thirdPartyYUVSnapshot)
-        inject_session_parameters(wrapper, stream_list, effective_pkg);
+        inject_session_parameters(ctx, stream_list, effective_pkg);
     } else {
         ALOGI("%s: [Camera %d] Privileged client '%s' detected, retaining native 108MP configuration",
-              __FUNCTION__, wrapper->camera_id, current_pkg.c_str());
+              __FUNCTION__, ctx->camera_id, current_pkg.c_str());
     }
 
-    return wrapper->orig_configure_streams(wrapper->real_dev, stream_list);
+    return ctx->orig_configure_streams(dev, stream_list);
 }
 
 // Wrapper for hw_device_t -> close
 static int shim_device_close(hw_device_t* dev) {
     if (!dev) return 0;
     camera3_device_t* cam3_dev = (camera3_device_t*)dev;
-    DeviceWrapper* wrapper = (DeviceWrapper*)cam3_dev->priv;
-    if (wrapper) {
-        orig_close_fn orig_close = wrapper->orig_close;
-        camera3_device_t* real_dev = wrapper->real_dev;
 
-        if (wrapper->injected_session_params) {
-            free_camera_metadata(wrapper->injected_session_params);
-            wrapper->injected_session_params = nullptr;
+    pthread_mutex_lock(&g_sessions_lock);
+    CameraSessionContext* ctx = nullptr;
+    for (int i = 0; i < MAX_CONCURRENT_CAMERAS; i++) {
+        if (g_sessions[i].in_use && g_sessions[i].dev == cam3_dev) {
+            ctx = &g_sessions[i];
+            break;
         }
+    }
 
-        delete wrapper;
-
-        // Reset package name property on camera closing
-        property_set("persist.vendor.camera.pkgname", "");
-        property_set("persist.vendor.camera.clientname", "");
-
-        if (orig_close && real_dev) {
-            return orig_close((hw_device_t*)real_dev);
+    orig_close_fn orig_close = nullptr;
+    if (ctx) {
+        orig_close = ctx->orig_close;
+        if (ctx->injected_session_params) {
+            free_camera_metadata(ctx->injected_session_params);
+            ctx->injected_session_params = nullptr;
         }
+        ctx->dev = nullptr;
+        ctx->orig_configure_streams = nullptr;
+        ctx->orig_close = nullptr;
+        ctx->in_use = false;
+        ALOGI("%s: Session closed and cleaned up for device %p", __FUNCTION__, cam3_dev);
+    }
+    pthread_mutex_unlock(&g_sessions_lock);
+
+    // Reset package name property on camera closing
+    property_set("persist.vendor.camera.pkgname", "");
+    property_set("persist.vendor.camera.clientname", "");
+
+    if (orig_close) {
+        return orig_close(dev);
     }
     return 0;
 }
@@ -459,7 +488,7 @@ static int shim_module_open(const hw_module_t* module, const char* id, hw_device
     hw_device_t* real_device = nullptr;
     int res = g_real_camera_module->common.methods->open((const hw_module_t*)g_real_camera_module, id, &real_device);
     if (res != 0 || !real_device) {
-        ALOGE("%s: Real camera HAL open failed for camera '%s' with error %d", __FUNCTION__, id, res);
+        ALOGE("%s: Real camera HAL open failed for camera '%s' with error %d", __FUNCTION__, id ? id : "unknown", res);
         return res;
     }
 
@@ -469,22 +498,54 @@ static int shim_module_open(const hw_module_t* module, const char* id, hw_device
         return 0;
     }
 
-    DeviceWrapper* wrapper = new DeviceWrapper();
-    wrapper->real_dev = real_cam3;
-    wrapper->camera_id = id ? atoi(id) : 0;
-    wrapper->orig_close = real_cam3->common.close;
-    wrapper->injected_session_params = nullptr;
+    pthread_mutex_lock(&g_sessions_lock);
+    CameraSessionContext* ctx = nullptr;
+    // Check if slot already exists for real_cam3
+    for (int i = 0; i < MAX_CONCURRENT_CAMERAS; i++) {
+        if (g_sessions[i].in_use && g_sessions[i].dev == real_cam3) {
+            ctx = &g_sessions[i];
+            break;
+        }
+    }
+    if (!ctx) {
+        for (int i = 0; i < MAX_CONCURRENT_CAMERAS; i++) {
+            if (!g_sessions[i].in_use) {
+                ctx = &g_sessions[i];
+                break;
+            }
+        }
+    }
+    if (!ctx) {
+        ALOGE("%s: Too many concurrent camera sessions! Fallback to direct device", __FUNCTION__);
+        pthread_mutex_unlock(&g_sessions_lock);
+        *device = real_device;
+        return 0;
+    }
 
-    memcpy(&wrapper->wrapped_ops, real_cam3->ops, sizeof(camera3_device_ops_t));
-    wrapper->orig_configure_streams = real_cam3->ops->configure_streams;
-    wrapper->wrapped_ops.configure_streams = shim_configure_streams;
+    ctx->dev = real_cam3;
+    ctx->camera_id = id ? atoi(id) : 0;
+    ctx->orig_close = real_cam3->common.close;
+    ctx->orig_configure_streams = real_cam3->ops->configure_streams;
+    if (ctx->injected_session_params) {
+        free_camera_metadata(ctx->injected_session_params);
+        ctx->injected_session_params = nullptr;
+    }
+    ctx->in_use = true;
 
-    real_cam3->ops = &wrapper->wrapped_ops;
-    real_cam3->priv = wrapper;
+    // Copy original ops table into our wrapped_ops
+    memcpy(&ctx->wrapped_ops, real_cam3->ops, sizeof(camera3_device_ops_t));
+    ctx->wrapped_ops.configure_streams = shim_configure_streams;
+
+    // Hook ops and close, but CRITICALLY: NEVER TOUCH real_cam3->priv!
+    // Qualcomm CamX stores its internal C++ object (with vtable verified by Clang CFI)
+    // in real_cam3->priv. Overwriting it causes SEGV_ACCERR in __cfi_slowpath!
+    real_cam3->ops = &ctx->wrapped_ops;
     real_cam3->common.close = shim_device_close;
+    pthread_mutex_unlock(&g_sessions_lock);
 
     *device = (hw_device_t*)real_cam3;
-    ALOGI("%s: Successfully wrapped camera3 device '%s' with Complete Veux HAL Shim", __FUNCTION__, id);
+    ALOGI("%s: Successfully hooked camera3 device '%s' (dev=%p, priv=%p preserved)",
+          __FUNCTION__, id ? id : "unknown", real_cam3, real_cam3->priv);
     return 0;
 }
 
