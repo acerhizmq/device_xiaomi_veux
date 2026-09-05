@@ -210,12 +210,9 @@ $(call soong_config_set_bool,lineage_health,charging_control_supports_bypass,fal
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay-service.sdm \
-    vendor.lineage.livedisplay-service.sysfs
+    vendor.lineage.livedisplay-service.sdm
 
 $(call soong_config_set_bool,livedisplay_sdm,enable_dm,false)
-$(call soong_config_set_bool,livedisplay_sysfs,enable_se,true)
-$(call soong_config_set_string,livedisplay_sysfs,se_path,/sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv)
 $(call soong_config_set,surfaceflinger,frame_rate_category_high,120)
 $(call soong_config_set,surfaceflinger,frame_rate_category_min,60)
 

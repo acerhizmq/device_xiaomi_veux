@@ -163,12 +163,8 @@ on boot
     mkdir /data/vendor/multimedia 0775 system system
 
 # High Brightness Mode (HBM) / Sunlight Enhancement permissions
-    chown system system /sys/class/drm/card0-DSI-1/bl_scale_sv
-    chmod 0666 /sys/class/drm/card0-DSI-1/bl_scale_sv
-    chown system system /sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv
-    chmod 0666 /sys/class/drm/sde-conn-1-DSI-1/bl_scale_sv
-    chown system system /sys/class/drm/sde-conn-0-DSI-1/bl_scale_sv
-    chmod 0666 /sys/class/drm/sde-conn-0-DSI-1/bl_scale_sv
+    chown system system /sys/class/drm/card0-DSI-1/hbm
+    chmod 0666 /sys/class/drm/card0-DSI-1/hbm
 
 #add perm for calib
     chmod 0777 /data/vendor/camera
