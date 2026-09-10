@@ -79,7 +79,9 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service_64
+    android.hardware.camera.provider@2.4-service_64 \
+    camera.qcom \
+    camera.qcom.real
 
 # Lunaris camxoverridesettings: log masks off; MCTF/EIS/multi-cam sync unchanged (configs/camera/).
 PRODUCT_COPY_FILES += \
