@@ -273,6 +273,21 @@ public class GpuManagerFragment extends PreferenceFragment
             int freqMhz = Integer.parseInt(value) / 1000000;
             preference.setSummary(freqMhz + " MHz");
             return true;
+        } else if (KEY_GPU_FORCE_CLK_ON.equals(key)) {
+            mGpuUtils.setForceClkOn((Boolean) newValue);
+            return true;
+        } else if (KEY_GPU_FORCE_BUS_ON.equals(key)) {
+            mGpuUtils.setForceBusOn((Boolean) newValue);
+            return true;
+        } else if (KEY_GPU_FORCE_RAIL_ON.equals(key)) {
+            mGpuUtils.setForceRailOn((Boolean) newValue);
+            return true;
+        } else if (KEY_GPU_FORCE_NO_NAP.equals(key)) {
+            mGpuUtils.setForceNoNap((Boolean) newValue);
+            return true;
+        } else if (KEY_GPU_BUS_SPLIT.equals(key)) {
+            mGpuUtils.setBusSplit((Boolean) newValue);
+            return true;
         }
         
         return true;
@@ -288,6 +303,23 @@ public class GpuManagerFragment extends PreferenceFragment
         // Apply frequencies
         if (mMinFreqPreference != null && mMaxFreqPreference != null) {
             mGpuUtils.setFrequencyRange(mMinFreqPreference.getValue(), mMaxFreqPreference.getValue());
+        }
+
+        // Apply power settings
+        if (mForceClkOnPreference != null) {
+            mGpuUtils.setForceClkOn(mForceClkOnPreference.isChecked());
+        }
+        if (mForceBusOnPreference != null) {
+            mGpuUtils.setForceBusOn(mForceBusOnPreference.isChecked());
+        }
+        if (mForceRailOnPreference != null) {
+            mGpuUtils.setForceRailOn(mForceRailOnPreference.isChecked());
+        }
+        if (mForceNoNapPreference != null) {
+            mGpuUtils.setForceNoNap(mForceNoNapPreference.isChecked());
+        }
+        if (mBusSplitPreference != null) {
+            mGpuUtils.setBusSplit(mBusSplitPreference.isChecked());
         }
         
         Toast.makeText(getContext(), R.string.settings_applied, Toast.LENGTH_SHORT).show();
