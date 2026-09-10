@@ -184,6 +184,14 @@ public class GpuManagerUtils {
         try {
             writeFile(GPU_BASE_PATH + GPU_MIN_FREQ, minFreq);
             writeFile(GPU_BASE_PATH + GPU_MAX_FREQ, maxFreq);
+            try {
+                int minMhz = Integer.parseInt(minFreq) / 1000000;
+                int maxMhz = Integer.parseInt(maxFreq) / 1000000;
+                writeFile(GPU_BASE_PATH + GPU_MIN_CLOCK_MHZ, String.valueOf(minMhz));
+                writeFile(GPU_BASE_PATH + GPU_MAX_CLOCK_MHZ, String.valueOf(maxMhz));
+            } catch (Exception e) {
+                // Ignore
+            }
         } catch (Exception e) {
             // Ignore errors
         }
