@@ -62,6 +62,7 @@ static const char* kCandidateRealHalPaths[] = {
     "/odm/lib64/hw/camera.qcom.real.so",
     "/vendor/lib64/camera/com.qti.sensor.imx318.so",
     "/vendor/lib64/camera/com.qti.sensor.imx334.so",
+    "/data/adb/modules/veux_camera_hal_shim/system/vendor/lib64/hw/camera.qcom.real.so",
 };
 
 // Xiaomi custom vendor tag section and names
@@ -402,13 +403,43 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
     std::string current_pkg = get_current_client_package((const camera_metadata_t*)stream_list->session_parameters);
     bool privileged = is_privileged_package(current_pkg);
 
+    // Safeguard: Check if streams indicate a pro / stock / high-res camera app
+    // WhatsApp/Signal/Instagram video calls never request streams > 1080p, and never RAW streams.
+    // If any stream is > 1080p or RAW, it is definitely a pro camera app (MiuiCamera, GCam, SnapCam).
+    if (!privileged) {
+        for (uint32_t i = 0; i < stream_list->num_streams; i++) {
+            const camera3_stream_t* s = stream_list->streams[i];
+            if (!s) continue;
+            if (s->width > 1920 || s->height > 1080) {
+                privileged = true;
+                break;
+            }
+            if (s->format == HAL_PIXEL_FORMAT_RAW16 ||
+                s->format == HAL_PIXEL_FORMAT_RAW10 ||
+                s->format == HAL_PIXEL_FORMAT_RAW_OPAQUE) {
+                privileged = true;
+                break;
+            }
+        }
+    }
+
+    struct StreamDataspaceBackup {
+        camera3_stream_t* stream;
+        android_dataspace_t orig_dataspace;
+    };
+    std::vector<StreamDataspaceBackup> dataspace_backups;
+    const camera_metadata_t* orig_session_params = stream_list->session_parameters;
+
     if (!privileged) {
         const std::string effective_pkg = current_pkg.empty() ? "com.whatsapp" : current_pkg;
         property_set("persist.vendor.camera.pkgname", effective_pkg.c_str());
         property_set("persist.vendor.camera.clientname", effective_pkg.c_str());
         property_set("persist.vendor.cam.strip3pjfif", "true");
 
-        // 1. Unconditional Stream Dataspace Sanitization (All <= 1080p preview streams -> HAL_DATASPACE_UNKNOWN)
+        // 1. Stream Dataspace Sanitization for Qualcomm CamX:
+        // Remap <=1080p preview/YUV streams from JFIF (0x08c20000) or other non-zero dataspaces
+        // to HAL_DATASPACE_UNKNOWN (0x0).
+        // This prevents Qualcomm CamX from constructing the heavy 108MP ZSL pipeline on Samsung S5KHM2.
         for (uint32_t i = 0; i < stream_list->num_streams; i++) {
             camera3_stream_t* s = stream_list->streams[i];
             if (!s) continue;
@@ -418,11 +449,14 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
                     s->format == HAL_PIXEL_FORMAT_YCrCb_420_SP ||
                     s->format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED) {
                     
-                    ALOGI("%s: [Camera %d] Sanitizing preview stream (fmt %#x %ux%u) dataspace "
-                          "0x%x -> UNKNOWN (0x0) for package '%s'",
-                          __FUNCTION__, ctx->camera_id, s->format, s->width, s->height,
-                          s->data_space, effective_pkg.c_str());
-                    s->data_space = HAL_DATASPACE_UNKNOWN;
+                    if (s->data_space != HAL_DATASPACE_UNKNOWN) {
+                        dataspace_backups.push_back({s, s->data_space});
+                        ALOGI("%s: [Camera %d] Sanitizing preview stream %u (fmt %#x %ux%u) dataspace "
+                              "0x%x -> UNKNOWN (0x0) for package '%s'",
+                              __FUNCTION__, ctx->camera_id, i, s->format, s->width, s->height,
+                              s->data_space, effective_pkg.c_str());
+                        s->data_space = HAL_DATASPACE_UNKNOWN;
+                    }
                 }
             }
         }
@@ -430,11 +464,34 @@ static int shim_configure_streams(const struct camera3_device *dev, camera3_stre
         // 2. Inject Xiaomi session parameters (clientName + thirdPartyYUVSnapshot)
         inject_session_parameters(ctx, stream_list, effective_pkg);
     } else {
-        ALOGI("%s: [Camera %d] Privileged client '%s' detected, retaining native 108MP configuration",
+        ALOGI("%s: [Camera %d] Privileged client '%s' or pro stream configuration detected, retaining native configuration",
               __FUNCTION__, ctx->camera_id, current_pkg.c_str());
     }
 
-    return ctx->orig_configure_streams(dev, stream_list);
+    int ret = ctx->orig_configure_streams(dev, stream_list);
+
+    // 3. CRITICAL RESTORATION:
+    // Restore original stream dataspace and session parameters before returning to HIDL HAL!
+    // CamX only needs dataspace=UNKNOWN during its internal pipeline construction in orig_configure_streams.
+    // Once orig_configure_streams returns, CamX stores its pipeline state in reserved[0] (pHalStream)
+    // and never accesses stream->data_space again.
+    // However, HIDL HAL (CameraDeviceSession.cpp) maintains mStreamMap[id]. If s->data_space is left
+    // as UNKNOWN (0x0), mStreamMap[id].data_space is corrupted in place.
+    // On subsequent calls (e.g. createCaptureSession after isSessionConfigurationSupported),
+    // HIDL detects mStreamMap[id].data_space != requestedDataSpace and fails with:
+    // "preProcessConfigurationLocked_3_4: stream 1 configuration changed!" (-38 ENOSYS).
+    // In addition, cameraserver HidlCamera3Device rejects it with:
+    // "Stream 1: DataSpace override not allowed for format 0x23".
+    // Restoring s->data_space ensures HIDL mStreamMap matches requestedDataSpace and overrideDataSpace
+    // is preserved, completely fixing the -38 error on 108MP!
+    for (const auto& b : dataspace_backups) {
+        b.stream->data_space = b.orig_dataspace;
+    }
+    if (orig_session_params != stream_list->session_parameters) {
+        stream_list->session_parameters = orig_session_params;
+    }
+
+    return ret;
 }
 
 // Wrapper for hw_device_t -> close
