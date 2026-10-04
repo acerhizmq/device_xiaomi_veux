@@ -20,3 +20,6 @@ ro.lmk.psi_partial_stall_ms=50
 
 # Disable RescueParty due to high risk of data loss
 persist.sys.disable_rescue=true
+
+# Disable Package Manager parse cache during boot
+pm.boot.disable_package_cache=true
