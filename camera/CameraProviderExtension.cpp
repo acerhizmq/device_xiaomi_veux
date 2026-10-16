@@ -8,6 +8,9 @@
 #include <cutils/properties.h>
 
 #include <atomic>
+#include <string>
+#include <utility>
+#include <vector>
 
 #define LOG_TAG "CameraProviderExtension"
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
@@ -73,26 +76,8 @@ void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
     setTorchStrengthSysfs(torchStrength);
 }
 
-int32_t getCameraCaptureFlashStrengthLevelExt() {
-    return getTorchMaxStrengthLevelExt();
-}
-
-// Used by the camera capture path; does not change the level reported for torch.
-void applyCameraCaptureFlashStrengthToSysfs() {
-    setTorchStrengthSysfs(getCameraCaptureFlashStrengthLevelExt());
-}
-
-void restoreTorchStrengthSysfsFromPersist() {
-    char value[PROPERTY_VALUE_MAX];
-    if (property_get("persist.flashlight.strength", value, "") <= 0) {
-        return;
-    }
-
-    char* end = nullptr;
-    long parsed = strtol(value, &end, 10);
-    if (end == value || parsed < 0 || parsed > 127) {
-        return;
-    }
-
-    setTorchStrengthLevelExt(static_cast<int32_t>(parsed), parsed > 0);
+// No per-app capture request overrides on veux.
+std::vector<std::pair<std::string, uint8_t>> getCaptureRequestU8OverridesExt(
+        const std::string& /* cameraId */, const std::string& /* packageName */) {
+    return {};
 }

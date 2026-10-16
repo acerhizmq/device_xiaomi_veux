@@ -35,9 +35,6 @@ on early-init
     start vendor.audioadsprpcd_audiopd
 
 on init
-    # Lunaris veux 108MP HM2 third-party video-chat mitigation (WhatsApp etc).
-    setprop persist.vendor.cam.strip3pjfif true
-
     # CamX MCTF/EIS gyro direct report (MIUI Camera video black tiles / Gyro disabled).
     setprop persist.vendor.sensors.support_direct_channel true
 
@@ -86,6 +83,8 @@ on late-fs
     mount_all --late
 
 on post-fs-data
+    # The camera HAL rewrites this on every session; drop the last app from before reboot.
+    setprop persist.vendor.camera.pkgname ""
     mkdir /vendor/data/tombstones 0771 system system
     mkdir /data/vendor/thermal 0771 root system
     mkdir /data/vendor/thermal/config 0771 root system

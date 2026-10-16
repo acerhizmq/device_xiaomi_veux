@@ -88,6 +88,8 @@ PRODUCT_COPY_FILES += \
 
 $(call soong_config_set_bool,camera,override_format_from_reserved,true)
 $(call soong_config_set,libcameraservice,ext_lib,libcameraservice_extension.veux)
+# Pass every camera client's package name to the Xiaomi HAL as a session parameter.
+$(call soong_config_set,camera,package_name,com.xiaomi.sessionparams.clientName)
 
 # CameraX extensions
 PRODUCT_COPY_FILES += \

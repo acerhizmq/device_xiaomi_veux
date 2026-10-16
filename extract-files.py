@@ -117,6 +117,10 @@ blob_fixups: blob_fixups_user_type = {
         .binary_regex_replace(
             b'persist.vendor.camera.clientname',
             b'persist.vendor.camera.pkgname\x00\x00\x00'),
+    'vendor/lib64/com.qti.feature2.rt.so': blob_fixup()
+        .binary_regex_replace(
+            b'persist.vendor.camera.clientname',
+            b'persist.vendor.camera.pkgname\x00\x00\x00'),
     ('vendor/lib64/libalLDC.so', 'vendor/lib64/libalhLDC.so'): blob_fixup()
         .clear_symbol_version('AHardwareBuffer_allocate')
         .clear_symbol_version('AHardwareBuffer_describe')
