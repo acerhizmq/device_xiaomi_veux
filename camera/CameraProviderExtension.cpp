@@ -10,44 +10,26 @@
 #define LOG_TAG "CameraProviderExtension"
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static const char* kTorchStrengthPaths[] = {
-    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength",
-    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@1/torch_strength",
-    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@3/torch_strength",
-};
+// Torch runs on the rear camera's flash device only. camera-flash@1 and @3 are
+// the same LED driver IC seen through the front and aux sensors; the kernel
+// rejects writes there because the HAL never drives torch on them.
+static const char* kTorchStrengthPath =
+    "/sys/devices/platform/soc/5c1b000.qcom,cci0/5c1b000.qcom,cci0:qcom,camera-flash@0/torch_strength";
 
-static void writeTorchStrengthPath(const char* path, int32_t torchStrength, bool* found) {
-    int fd = open(path, O_WRONLY);
+static void setTorchStrengthSysfs(int32_t torchStrength) {
+    int fd = open(kTorchStrengthPath, O_WRONLY);
     if (fd < 0) {
-        ALOGE("setTorchStrengthSysfs: Failed to open %s (errno: %d)", path, errno);
+        ALOGE("setTorchStrengthSysfs: Failed to open %s (errno: %d)", kTorchStrengthPath, errno);
         return;
     }
 
     char buf[16];
     int len = snprintf(buf, sizeof(buf), "%d", torchStrength);
-    if (write(fd, buf, len) > 0) {
-        ALOGE("setTorchStrengthSysfs: Successfully wrote %d to %s", torchStrength, path);
-        if (found != nullptr) {
-            *found = true;
-        }
-    } else {
-        ALOGE("setTorchStrengthSysfs: Failed to write %d to %s (errno: %d)", torchStrength, path,
-                errno);
+    if (write(fd, buf, len) <= 0) {
+        ALOGE("setTorchStrengthSysfs: Failed to write %d to %s (errno: %d)", torchStrength,
+                kTorchStrengthPath, errno);
     }
     close(fd);
-}
-
-static void setTorchStrengthSysfs(int32_t torchStrength) {
-    bool found = false;
-    for (const char* path : kTorchStrengthPaths) {
-        if (access(path, F_OK) == 0) {
-            writeTorchStrengthPath(path, torchStrength, &found);
-        }
-    }
-
-    if (!found) {
-        ALOGE("setTorchStrengthSysfs: Could not write any veux torch_strength node!");
-    }
 }
 
 bool supportsTorchStrengthControlExt() {
@@ -68,7 +50,7 @@ int32_t getTorchMaxStrengthLevelExt() {
 
 int32_t getTorchStrengthLevelExt() {
     char value[16] = {};
-    int fd = open(kTorchStrengthPaths[0], O_RDONLY);
+    int fd = open(kTorchStrengthPath, O_RDONLY);
     if (fd < 0) {
         return 0;
     }
@@ -81,8 +63,7 @@ int32_t getTorchStrengthLevelExt() {
 }
 
 void setTorchStrengthLevelExt(int32_t torchStrength, bool enabled) {
-    // HAL setTorchMode(false) already extinguished the torch. sysfs strength=0 here
-    // blocks cameraserver ~9s (CCI timeout on 3 nodes) and stalls QS reopen.
+    // HAL setTorchMode(false) already extinguished the torch.
     if (!enabled) {
         return;
     }
