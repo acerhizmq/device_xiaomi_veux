@@ -4,3 +4,6 @@ allow cameraserver sysfs_leds:dir search;
 
 # Flashlight strength
 get_prop(cameraserver, acer_flashlight_prop)
+
+# Third-party JFIF test switch (persist.vendor.cam.3pjfif)
+get_prop(cameraserver, vendor_persist_camera_prop)
