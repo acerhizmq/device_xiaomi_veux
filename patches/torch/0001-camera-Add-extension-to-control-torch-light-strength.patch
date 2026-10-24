@@ -1,4 +1,4 @@
-From 41effb527914a9ca875a94549a2f5fcbb93f22f6 Mon Sep 17 00:00:00 2001
+From 1095076c05d8770e7a4fb9a3f01540b8bbca4c01 Mon Sep 17 00:00:00 2001
 From: Dhina17 <dhinalogu@gmail.com>
 Date: Sun, 26 May 2024 15:29:14 +0530
 Subject: [PATCH] camera: Add extension to control torch light strength
@@ -15,47 +15,27 @@ Squashed:
 
 Change-Id: Ib154aa4a1e6137a6b8ecab9245905f72b951db16
 Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+
+[veux: Android.bp changes anchored on the libcameraservice module only:
+ libcameraservice_ext_lib defined right above it, whole_static_libs next to
+ its name, unused camera.ext_lib cflag dropped. No ROM-specific context.]
 ---
- services/camera/libcameraservice/Android.bp   | 17 +++++++
+ services/camera/libcameraservice/Android.bp   | 14 ++++++
  .../common/CameraProviderExtension.cpp        | 41 +++++++++++++++++
  .../common/CameraProviderExtension.h          | 23 ++++++++++
  .../common/CameraProviderManager.cpp          | 46 +++++++++++++++++--
- 4 files changed, 123 insertions(+), 4 deletions(-)
+ 4 files changed, 120 insertions(+), 4 deletions(-)
  create mode 100644 services/camera/libcameraservice/common/CameraProviderExtension.cpp
  create mode 100644 services/camera/libcameraservice/common/CameraProviderExtension.h
 
 diff --git a/services/camera/libcameraservice/Android.bp b/services/camera/libcameraservice/Android.bp
-index 34a16f193b..96272340cc 100644
+index 362a390..f2ca562 100644
 --- a/services/camera/libcameraservice/Android.bp
 +++ b/services/camera/libcameraservice/Android.bp
-@@ -143,6 +143,7 @@ cc_library {
-         "common/Camera2ClientBase.cpp",
-         "common/CameraDeviceBase.cpp",
-         "common/CameraOfflineSessionBase.cpp",
-+        "common/CameraProviderExtension.cpp",
-         "common/CameraProviderManager.cpp",
-         "common/FrameProcessorBase.cpp",
-         "common/hidl/HidlProviderInfo.cpp",
-@@ -269,6 +270,14 @@ cc_library {
-         true: ["-DDISABLE_TORCH_CONTROL"],
-         false: [],
-         default: [],
-+    }) + select(soong_config_variable("camera", "ext_lib"), {
-+        any @ flag_val: ["-DTARGET_PROVIDES_CAMERA_PROVIDER_EXT_LIB"],
-+        default: [],
-+    }),
-+
-+    whole_static_libs: select(soong_config_variable("libcameraservice", "ext_lib"), {
-+        any @ flag_val: [flag_val],
-+        default: ["libcameraservice_ext_lib"],
-     }),
- }
- 
-@@ -368,3 +377,11 @@ genrule {
-         "statslog_framework.cpp",
+@@ -128,9 +128,22 @@ cc_defaults {
      ],
  }
-+
+ 
 +cc_library_static {
 +    name: "libcameraservice_ext_lib",
 +    srcs: [
@@ -63,9 +43,29 @@ index 34a16f193b..96272340cc 100644
 +    ],
 +    export_include_dirs: ["."],
 +}
++
+ cc_library {
+     name: "libcameraservice",
+ 
++    whole_static_libs: select(soong_config_variable("libcameraservice", "ext_lib"), {
++        any @ flag_val: [flag_val],
++        default: ["libcameraservice_ext_lib"],
++    }),
++
+     defaults: [
+         "libcameraservice_deps",
+     ],
+@@ -143,6 +156,7 @@ cc_library {
+         "common/Camera2ClientBase.cpp",
+         "common/CameraDeviceBase.cpp",
+         "common/CameraOfflineSessionBase.cpp",
++        "common/CameraProviderExtension.cpp",
+         "common/CameraProviderManager.cpp",
+         "common/FrameProcessorBase.cpp",
+         "common/hidl/HidlProviderInfo.cpp",
 diff --git a/services/camera/libcameraservice/common/CameraProviderExtension.cpp b/services/camera/libcameraservice/common/CameraProviderExtension.cpp
 new file mode 100644
-index 0000000000..fe7b9f3160
+index 0000000..fe7b9f3
 --- /dev/null
 +++ b/services/camera/libcameraservice/common/CameraProviderExtension.cpp
 @@ -0,0 +1,41 @@
@@ -112,7 +112,7 @@ index 0000000000..fe7b9f3160
 +#endif
 diff --git a/services/camera/libcameraservice/common/CameraProviderExtension.h b/services/camera/libcameraservice/common/CameraProviderExtension.h
 new file mode 100644
-index 0000000000..ae17a2fc00
+index 0000000..ae17a2f
 --- /dev/null
 +++ b/services/camera/libcameraservice/common/CameraProviderExtension.h
 @@ -0,0 +1,23 @@
@@ -140,7 +140,7 @@ index 0000000000..ae17a2fc00
 +extern int32_t getTorchStrengthLevelExt();
 +extern void setTorchStrengthLevelExt(int32_t torchStrength);
 diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
-index 20b9ee3081..4b2340b37b 100644
+index cfa8e6d..6654275 100644
 --- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
 +++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
 @@ -57,6 +57,8 @@
@@ -202,7 +202,7 @@ index 20b9ee3081..4b2340b37b 100644
  }
  
  bool CameraProviderManager::supportSetTorchMode(const std::string &id) const {
-@@ -3663,8 +3688,21 @@ status_t CameraProviderManager::getCameraCharacteristicsLocked(const std::string
+@@ -3672,8 +3697,21 @@ status_t CameraProviderManager::getCameraCharacteristicsLocked(const std::string
          const CameraCompatibilityInfo& compatInfo) const {
      auto deviceInfo = findDeviceInfoLocked(id);
      if (deviceInfo != nullptr) {

@@ -1,0 +1,28 @@
+From 11d225e9ae8ccca7fce1343dc436f25781c7b2de Mon Sep 17 00:00:00 2001
+From: bengris32 <bengris32@protonmail.ch>
+Date: Sat, 7 Dec 2024 14:13:21 +0000
+Subject: [PATCH] CameraProviderExtension: Update mTorchStrengthLevel with new
+ level
+
+Change-Id: Ia6a5cbec9aa16d5ba36a5a3a9c090769c13aa587
+Signed-off-by: bengris32 <bengris32@protonmail.ch>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../camera/libcameraservice/common/CameraProviderManager.cpp     | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+index bbe31b1ac9..89444d2446 100644
+--- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
++++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+@@ -613,6 +613,7 @@ status_t CameraProviderManager::turnOnTorchWithStrengthLevel(const std::string &
+ 
+         deviceInfo->setTorchMode(torchStrength > 0);
+         setTorchStrengthLevelExt(torchStrength);
++        deviceInfo->mTorchStrengthLevel = torchStrength;
+         return OK;
+     } else {
+         return deviceInfo->turnOnTorchWithStrengthLevel(torchStrength);
+-- 
+2.53.0
+

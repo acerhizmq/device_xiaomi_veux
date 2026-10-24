@@ -1,0 +1,35 @@
+From f17f2b9ee6b12d4735150071027be83e0a7424a2 Mon Sep 17 00:00:00 2001
+From: bengris32 <bengris32@protonmail.ch>
+Date: Sat, 7 Dec 2024 14:12:05 +0000
+Subject: [PATCH] CameraProviderExtension: Return BAD_VALUE for invalid
+ strength level
+
+Change-Id: If53c41a80752a37ff273333b75ef5d1066cecb94
+Signed-off-by: bengris32 <bengris32@protonmail.ch>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../libcameraservice/common/CameraProviderManager.cpp     | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+index 6b36245bd9..bbe31b1ac9 100644
+--- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
++++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+@@ -604,7 +604,13 @@ status_t CameraProviderManager::turnOnTorchWithStrengthLevel(const std::string &
+     // Use the extension only for the camera that has flash unit
+     // Otherwise fallback to the default impl.
+     if (deviceInfo->hasFlashUnit() && supportsTorchStrengthControlExt()) {
+-        // Turn on the torch if level > 0.
++        // Return BAD_VALUE if the strength is not in the supported
++        // range.
++        if (torchStrength <= 0 || torchStrength > getTorchMaxStrengthLevelExt()) {
++            ALOGE("%s: Invalid torch strength level %d", __FUNCTION__, torchStrength);
++            return BAD_VALUE;
++        }
++
+         deviceInfo->setTorchMode(torchStrength > 0);
+         setTorchStrengthLevelExt(torchStrength);
+         return OK;
+-- 
+2.53.0
+
