@@ -33,3 +33,6 @@ fi
 if [ ! -d "hardware/qcom-caf/bt" ]; then
     git clone https://github.com/acerhizmq/hardware_qcom_bt.git -b lineage-23.2-caf hardware/qcom-caf/bt
 fi
+
+# Framework patches (MIUI camera, torch strength, WhatsApp camera); skips what the ROM has
+bash device/xiaomi/veux/tools/apply-patches.sh --quiet || echo "veux: framework patches need attention, see above"

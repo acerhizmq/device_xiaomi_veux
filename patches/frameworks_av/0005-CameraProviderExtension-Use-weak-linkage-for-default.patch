@@ -1,0 +1,56 @@
+From cd4051abeb5ad510ae2c3de0a3228a9c88c9a4d4 Mon Sep 17 00:00:00 2001
+From: bengris32 <bengris32@protonmail.ch>
+Date: Tue, 8 Oct 2024 11:13:21 +0100
+Subject: [PATCH] CameraProviderExtension: Use weak linkage for default
+ implementations
+
+Change-Id: I0a8744c1318caf38c4c9e3db2ed498e9c287f4f2
+Signed-off-by: bengris32 <bengris32@protonmail.ch>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../common/CameraProviderExtension.cpp             | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/services/camera/libcameraservice/common/CameraProviderExtension.cpp b/services/camera/libcameraservice/common/CameraProviderExtension.cpp
+index 8bb171e7c2..6dbabbad8d 100644
+--- a/services/camera/libcameraservice/common/CameraProviderExtension.cpp
++++ b/services/camera/libcameraservice/common/CameraProviderExtension.cpp
+@@ -14,30 +14,26 @@
+  * limitations under the License.
+  */
+ 
+-#ifndef TARGET_PROVIDES_CAMERA_PROVIDER_EXT_LIB
+-
+ #include "common/CameraProviderExtension.h"
+ 
+-bool supportsTorchStrengthControlExt() {
++__attribute__((weak)) bool supportsTorchStrengthControlExt() {
+     return false;
+ }
+ 
+-int32_t getTorchDefaultStrengthLevelExt() {
++__attribute__((weak)) int32_t getTorchDefaultStrengthLevelExt() {
+     // Without extension, assume only one level of torch strength
+     return 1;
+ }
+ 
+-int32_t getTorchMaxStrengthLevelExt() {
++__attribute__((weak)) int32_t getTorchMaxStrengthLevelExt() {
+     // Without extension, assume only one level of torch strength
+     return 1;
+ }
+ 
+-int32_t getTorchStrengthLevelExt() {
++__attribute__((weak)) int32_t getTorchStrengthLevelExt() {
+     return 0;
+ }
+ 
+-void setTorchStrengthLevelExt(__unused int32_t torchStrength) {
++__attribute__((weak)) void setTorchStrengthLevelExt(__unused int32_t torchStrength) {
+     // Nothing
+ }
+-
+-#endif
+-- 
+2.53.0
+

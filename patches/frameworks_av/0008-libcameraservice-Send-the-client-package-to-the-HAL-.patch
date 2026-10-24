@@ -1,0 +1,162 @@
+From 3da5eff7ea9fb2f7d6f6db0db3996dfa1eda8005 Mon Sep 17 00:00:00 2001
+From: acerhizmq <acerhizm@protonmail.com>
+Date: Thu, 22 Oct 2026 20:04:23 +0300
+Subject: [PATCH] libcameraservice: Send the client package to the HAL without
+ reconfiguring
+
+The CAMERA_PACKAGE_NAME hook wrote the package into sessionParams itself
+through a const_cast. On Xiaomi CamX the tag (com.xiaomi.sessionparams.
+clientName) is an advertised session key and the HAL does not implement
+is_reconfiguration_required, so every capture request, which does not
+carry the tag, looked like a session parameter change. The internal
+reconfiguration ran through the same hook, put the tag back into the
+request thread's latest session params, and the session was rebuilt
+every few hundred milliseconds: WhatsApp got no frames, the stock camera
+one frame per session.
+
+- Write the tag only into a copy that is handed to the HAL, on every
+  configuration including internal reconfigurations. The request thread
+  and mSessionParams keep the caller's parameters, so requests no longer
+  differ from them.
+- Resolve the tag with the device's own vendor tag id instead of the one
+  stored in the incoming metadata.
+- Tag each device with the package of the client that opened it instead
+  of the process-wide current package, which every later connect attempt
+  overwrites, even a rejected one.
+
+The CamX HAL keeps the previous client's app flags and
+persist.vendor.camera.pkgname when a configuration has no tag, so the
+tag has to be present on every configuration.
+
+Also add persist.vendor.cam.3pjfif (default off): when set, a
+non-privileged client's YUV stream up to 1080p with JFIF dataspace is
+configured as UNKNOWN, so the Xiaomi HAL does not treat a video call's
+small YUV stream as a ZSL snapshot.
+---
+ .../common/Camera2ClientBase.cpp              |  7 ++++
+ .../device3/Camera3Device.cpp                 | 32 +++++++++----------
+ .../libcameraservice/device3/Camera3Device.h  |  7 ++++
+ .../utils/SessionConfigurationUtils.cpp       |  9 ++++++
+ 4 files changed, 39 insertions(+), 16 deletions(-)
+
+diff --git a/services/camera/libcameraservice/common/Camera2ClientBase.cpp b/services/camera/libcameraservice/common/Camera2ClientBase.cpp
+index 9f8e03c9e7..8d716bd528 100644
+--- a/services/camera/libcameraservice/common/Camera2ClientBase.cpp
++++ b/services/camera/libcameraservice/common/Camera2ClientBase.cpp
+@@ -148,6 +148,13 @@ status_t Camera2ClientBase<TClientBase>::initializeImpl(TProviderPtr providerPtr
+         return NO_INIT;
+     }
+ 
++#ifdef CAMERA_PACKAGE_NAME
++    // Each device names its own client; the process-wide current package is overwritten by
++    // every later connect attempt, even one that gets rejected.
++    static_cast<Camera3Device*>(mDevice.get())->setClientPackageName(
++            TClientBase::getPackageName());
++#endif
++
+     // Notify camera opening (check op if check_full_attribution_source_chain flag is off).
+     res = TClientBase::notifyCameraOpening();
+     if (res != OK) {
+diff --git a/services/camera/libcameraservice/device3/Camera3Device.cpp b/services/camera/libcameraservice/device3/Camera3Device.cpp
+index c6839e09e5..73b0ce58db 100644
+--- a/services/camera/libcameraservice/device3/Camera3Device.cpp
++++ b/services/camera/libcameraservice/device3/Camera3Device.cpp
+@@ -2589,24 +2589,24 @@ status_t Camera3Device::configureStreamsLocked(int operatingMode,
+     }
+ 
+ #ifdef CAMERA_PACKAGE_NAME
+-    sp<VendorTagDescriptor> vTags;
+-    sp<VendorTagDescriptorCache> vCache = VendorTagDescriptorCache::getGlobalVendorTagCache();
+-    if (vCache.get()) {
+-        const camera_metadata_t *metaBuffer = sessionParams.getAndLock();
+-        metadata_vendor_id_t vendorId = get_camera_metadata_vendor_id(metaBuffer);
+-        sessionParams.unlock(metaBuffer);
+-        vCache->getVendorTagDescriptor(vendorId, &vTags);
++    // The HAL picks per-app behaviour from this session tag and keeps the previous app's
++    // state when the tag is missing, so send it on every configuration. Only the HAL's copy
++    // gets it: the HAL lists the tag as a session key, so if sessionParams itself carried it
++    // the request thread would see requests "remove" it and reconfigure forever.
++    CameraMetadata halSessionParams(sessionParams);
++    {
++        sp<VendorTagDescriptor> vTags;
++        sp<VendorTagDescriptorCache> vCache = VendorTagDescriptorCache::getGlobalVendorTagCache();
+         uint32_t tag;
+-        if (CameraMetadata::getTagFromName(CAMERA_PACKAGE_NAME, vTags.get(), &tag)) {
++        if (vCache == nullptr || vCache->getVendorTagDescriptor(mVendorTagId, &vTags) != OK ||
++                CameraMetadata::getTagFromName(CAMERA_PACKAGE_NAME, vTags.get(), &tag) != OK) {
+             ALOGE("%s: Unable to get %s tag", __FUNCTION__, CAMERA_PACKAGE_NAME);
+-        } else {
+-            std::string pkgName = CameraService::getCurrPackageName();
+-            status_t res = const_cast<CameraMetadata&>(sessionParams).update(tag, String8(pkgName.c_str()));
+-            if (res) {
+-                ALOGE("%s: metadata update failed, res = %d", __FUNCTION__, res);
+-            }
++        } else if (halSessionParams.update(tag, String8(mClientPackageName.c_str())) != OK) {
++            ALOGE("%s: Unable to set %s", __FUNCTION__, CAMERA_PACKAGE_NAME);
+         }
+     }
++#else
++    const CameraMetadata& halSessionParams = sessionParams;
+ #endif
+ 
+     bool isConstrainedHighSpeed =
+@@ -2760,9 +2760,9 @@ status_t Camera3Device::configureStreamsLocked(int operatingMode,
+     // is not enabled but the HAL supports session specific hal buffer manager).
+ 
+     int64_t logId = mCameraServiceProxyWrapper->getCurrentLogIdForCamera(mId);
+-    const camera_metadata_t *sessionBuffer = sessionParams.getAndLock();
++    const camera_metadata_t *sessionBuffer = halSessionParams.getAndLock();
+     res = mInterface->configureStreams(sessionBuffer, &config, bufferSizes, logId);
+-    sessionParams.unlock(sessionBuffer);
++    halSessionParams.unlock(sessionBuffer);
+ 
+     if (res == BAD_VALUE) {
+         // HAL rejected this set of streams as unsupported, clean up config
+diff --git a/services/camera/libcameraservice/device3/Camera3Device.h b/services/camera/libcameraservice/device3/Camera3Device.h
+index dcc1280d93..d2641f6fc8 100644
+--- a/services/camera/libcameraservice/device3/Camera3Device.h
++++ b/services/camera/libcameraservice/device3/Camera3Device.h
+@@ -430,6 +430,11 @@ class Camera3Device :
+      */
+     status_t injectSessionParams(const CameraMetadata& sessionParams);
+ 
++    // Package of the client that owns this device, for CAMERA_PACKAGE_NAME.
++    void setClientPackageName(const std::string& packageName) {
++        mClientPackageName = packageName;
++    }
++
+   protected:
+     status_t disconnectImpl();
+     static status_t removeFwkOnlyKeys(CameraMetadata *request);
+@@ -1540,6 +1545,8 @@ class Camera3Device :
+ 
+     metadata_vendor_id_t mVendorTagId;
+ 
++    std::string mClientPackageName;
++
+     // Cached last requested template id
+     int mLastTemplateId;
+ 
+diff --git a/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp b/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp
+index 7cbf6995e8..49fc3263c6 100644
+--- a/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp
++++ b/services/camera/libcameraservice/utils/SessionConfigurationUtils.cpp
+@@ -600,6 +600,15 @@ binder::Status createConfiguredSurface(
+                 __FUNCTION__, logicalCameraId.c_str(), format);
+         format = HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED;
+     }
++    // Test switch: video calls (e.g. WhatsApp) add a small YUV+JFIF stream that the Xiaomi
++    // HAL treats as a ZSL snapshot. Off by default; persist.vendor.cam.3pjfif=true remaps it.
++    if (!isPriviledgedClient && format == HAL_PIXEL_FORMAT_YCbCr_420_888 &&
++            dataSpace == HAL_DATASPACE_V0_JFIF && width <= 1920 && height <= 1080 &&
++            property_get_bool("persist.vendor.cam.3pjfif", false)) {
++        ALOGI("%s: Camera %s: third-party %dx%d YUV stream, JFIF -> UNKNOWN",
++                __FUNCTION__, logicalCameraId.c_str(), width, height);
++        dataSpace = HAL_DATASPACE_UNKNOWN;
++    }
+     std::unordered_set<int32_t> overriddenSensorPixelModes;
+     if (checkAndOverrideSensorPixelModesUsed(sensorPixelModesUsed, format, width, height,
+             physicalCameraMetadata, &overriddenSensorPixelModes) != OK) {
+-- 
+2.53.0
+

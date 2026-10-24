@@ -1,0 +1,60 @@
+From fd780391e8f9d7e3705a6c6910e0614ddabe793a Mon Sep 17 00:00:00 2001
+From: Terminator-J <terminator_j@hotbutteredmonkey.com>
+Date: Mon, 2 Jun 2025 08:59:46 -0700
+Subject: [PATCH] libcameraservice: Fixup! Add support to set vendor tag with
+ client package name
+
+Match prior cc_defaults implementation:
+* Fix libcameraservice cflags to use correct #ifdef variable (vital, fixes issues)
+* Add cflags to cameraserver as before (probably not needed but it seems to be working this way & doesn't impact those not using this config)
+* Add escaped double quotes for passing variable name to match previous behavior
+* Whitespace cleanup (always!)
+---
+ camera/cameraserver/Android.bp              | 8 +++++++-
+ services/camera/libcameraservice/Android.bp | 2 +-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/camera/cameraserver/Android.bp b/camera/cameraserver/Android.bp
+index d0df90b833..5636aac743 100644
+--- a/camera/cameraserver/Android.bp
++++ b/camera/cameraserver/Android.bp
+@@ -53,16 +53,22 @@ cc_binary {
+         "android.hardware.camera.device@3.2",
+         "android.hardware.camera.device@3.4",
+     ],
++
+     static_libs: [
+         "libcameraservice",
+     ],
++
+     compile_multilib: "first",
++
+     cflags: [
+         "-Wall",
+         "-Wextra",
+         "-Werror",
+         "-Wno-unused-parameter",
+-    ],
++    ] + select(soong_config_variable("camera", "package_name"), {
++        any @ flag_val: ["-DCAMERA_PACKAGE_NAME=\"" + flag_val + "\""],
++        default: [],
++    }),
+ 
+     init_rc: ["cameraserver.rc"],
+ 
+diff --git a/services/camera/libcameraservice/Android.bp b/services/camera/libcameraservice/Android.bp
+index eb7e8e578d..48aa4ed6d4 100644
+--- a/services/camera/libcameraservice/Android.bp
++++ b/services/camera/libcameraservice/Android.bp
+@@ -244,7 +244,7 @@ cc_library {
+         "-Werror",
+         "-Wno-ignored-qualifiers",
+     ] + select(soong_config_variable("camera", "package_name"), {
+-        any @ flag_val: ["-DTARGET_CAMERA_PACKAGE_NAME=" + flag_val],
++        any @ flag_val: ["-DCAMERA_PACKAGE_NAME=\"" + flag_val + "\""],
+         default: [],
+     }),
+ }
+-- 
+2.53.0
+

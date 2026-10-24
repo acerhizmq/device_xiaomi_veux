@@ -1,0 +1,36 @@
+From c3a439ca87160e16b3dd86f226f8a3fa8015963e Mon Sep 17 00:00:00 2001
+From: bengris32 <bengris32@protonmail.ch>
+Date: Sat, 7 Dec 2024 14:16:32 +0000
+Subject: [PATCH] CameraProviderExtension: Reset strength level on torch off
+
+Change-Id: Ie96d5d62786023d1179529daeca24242dfcd0413
+Signed-off-by: bengris32 <bengris32@protonmail.ch>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../libcameraservice/common/CameraProviderManager.cpp  | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+index 89444d2446..643de132ae 100644
+--- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
++++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+@@ -711,7 +711,15 @@ status_t CameraProviderManager::setTorchMode(const std::string &id, bool enabled
+     }
+     saveRef(DeviceMode::TORCH, deviceInfo->mId, halCameraProvider);
+ 
+-    return deviceInfo->setTorchMode(enabled);
++    res = deviceInfo->setTorchMode(enabled);
++    if (!enabled &&
++        deviceInfo->hasFlashUnit() && supportsTorchStrengthControlExt()) {
++        // Need to reset torch strength back to default when torch is turned off
++        int32_t defaultLevel = getTorchDefaultStrengthLevelExt();
++        setTorchStrengthLevelExt(defaultLevel);
++        deviceInfo->mTorchStrengthLevel = defaultLevel;
++    }
++    return res;
+ }
+ 
+ status_t CameraProviderManager::setUpVendorTags() {
+-- 
+2.53.0
+
